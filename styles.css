@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+  font-size: calc(calc(2 / 41 * 98vh) / 4);
+  margin: 0;
+  padding: 0;
+}
+.line {
+  position: absolute;
+  width: 1px;
+  background: #add8e6;
+  z-index: -1;
+  height: calc(2 / 41 * 98vh);
+}
+.page {
+  border: #808080 1px solid;
+  box-shadow: 5px 5px 5px #c0c0c0, -5px -5px 5px #c0c0c0;
+  display: flex;
+  height: 98vh;
+  left: 50%;
+  margin: 1vh;
+  padding: calc(calc(2 / 41 * 98vh) / 4);
+  position: absolute;
+  transform: translate(-50%);
+  width: calc(0.75609756097560975609756097560976 * 98vh);
+}
+.section {
+  display: flex;
+  flex-direction: column;
+}
+.section .character-note {
+  display: inherit;
+  height: calc(calc(2 / 41 * 98vh) * 2);
+  width: calc(calc(2 / 41 * 98vh) * 2);
+  flex-wrap: wrap;
+  z-index: 1;
+}
+.section .character-note .square {
+  border-top: #add8e6 1px solid;
+  border-right: #add8e6 1px solid;
+  display: inherit;
+  height: calc(2 / 41 * 98vh);
+  width: calc(2 / 41 * 98vh);
+  justify-content: center;
+  z-index: 1;
+  position: relative;
+}
+.section .character-note .square:before {
+  border-top: #add8e6 1px solid;
+  content: "";
+  margin: 0 auto /* this centers the line to the full width specified */;
+  position: absolute /* positioning must be absolute here, and relative positioning must be applied to the parent */;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: calc(2 / 41 * 98vh);
+  z-index: -1;
+}
+.section .character-note .square.tittle {
+  align-items: center;
+  border: none;
+  display: inherit;
+  height: calc(2 / 41 * 98vh);
+  justify-content: start;
+  width: calc(calc(2 / 41 * 98vh) * 2);
+  position: relative;
+  z-index: 1;
+}
+.section .character-note .square.tittle .square {
+  z-index: -1;
+}
+.section .character-note .square.tittle h1 {
+  font-size: 1.25rem;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  z-index: 2;
+}
+.section .character-note .square.character {
+  align-items: center;
+}
+.section .character-note .square.character p {
+  font-size: 2.75vw;
+  position: absolute;
+  z-index: 1;
+}
+.section .character-note .square.text {
+  align-items: center;
+}
+.section .character-note .square.pronunciation {
+  font-size: calc(calc(2 / 41 * 98vh) /3);
+  z-index: 1;
+}
