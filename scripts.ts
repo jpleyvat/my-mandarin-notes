@@ -5,7 +5,12 @@ interface MandarinNote {
 }
 
 class Section {
+	keepRow: boolean = false;
+	row: any;
 	constructor(private sectionName) {
+		// Global constants
+		this.row = this.createDiv();
+		this.row.classList.add('row');
 		// Elements asignment
 		let [divTittle, div, div2, line, line2, tittle] = [
 			this.createDiv(),
@@ -35,11 +40,16 @@ class Section {
 			sectionName.appendChild(divTittle);
 	}
 
-	createDiv() {
-		return document.createElement('div');
-	}
-
 	createNote(noteData: MandarinNote[], classes?: string[]) {
+		if (this.keepRow) {
+			this.sectionName.appendChild(this.row);
+			this.keepRow = false;
+		} else {
+			let newRow = this.createDiv();
+			newRow.classList.add('row');
+			this.row = newRow;
+			this.sectionName.appendChild(this.row);
+		}
 		if (noteData.length === 1) {
 			if (classes) {
 				this.formatNote(noteData[0], classes);
@@ -49,7 +59,7 @@ class Section {
 		} else {
 			let wordBody = this.createDiv();
 			wordBody.classList.add('word-note');
-			this.sectionName.appendChild(wordBody);
+			this.row.appendChild(wordBody);
 			for (let i = 0; i < noteData.length; i++) {
 				if (classes) {
 					this.formatNote(noteData[i], wordBody, classes);
@@ -67,7 +77,9 @@ class Section {
 	) {
 		let noteBody = this.createDiv();
 		noteBody.classList.add('character-note');
-		this.sectionName.appendChild(noteBody);
+
+		this.row.appendChild(noteBody);
+
 		let note = [
 			{
 				element: document.createElement('p'),
@@ -125,41 +137,51 @@ class Section {
 			}
 		]);
 	}
+
+	sameRow() {
+		this.keepRow = true;
+	}
+
+	changeDirection() {
+		this.sectionName.style.flexDirection = 'row';
+	}
+
+	createDiv() {
+		return document.createElement('div');
+	}
 }
 
-// document.addEventListener('DOMContentLoaded', function getWidths() {
-// 	let sections: any = document.getElementsByClassName('section');
-// 	for (let i = 0; i < sections.length; i++) {
-// 		let children: any = sections[i].childNodes;
-// 		for (let j = 0; j < children.length; j++) {
-// 			if (children[j].offsetWidth) {
-// 				if (
-// 					children[j].offsetWidth > sections[i].offsetWidth
-// 				) {
-// 					let charWidth = sections[i].offsetWidth / 2;
-// 					let tittle: any = sections[
-// 						i
-// 					].getElementsByClassName('tittle');
-// 					for (
-// 						let k =
-// 							children[j].offsetWidth -
-// 							sections[i].offsetWidth;
-// 						Math.floor(k) > 0;
-// 						k -= Math.ceil(charWidth)
-// 					) {
-// 						let divSquareLine = squareWithLine();
-// 						tittle[0].appendChild(divSquareLine);
-// 					}
-// 					console.log(tittle);
-// 					sections[i].style.width =
-// 						(children[j].offsetWidth + 1).toString() +
-// 						'px';
-// 					sections[i].style.flexDirection = 'row';
-// 				}
-// 			}
-// 		}
-// 	}
-// });
+document.addEventListener('DOMContentLoaded', function getWidths() {
+	let sections: any = document.getElementsByClassName('section');
+	for (let i = 0; i < sections.length; i++) {
+		let children: any = sections[i].childNodes;
+		for (let j = 0; j < children.length; j++) {
+			if (children[j].offsetWidth) {
+				if (
+					children[j].offsetWidth > sections[i].offsetWidth
+				) {
+					let charWidth = sections[i].offsetWidth / 2;
+					let tittle: any = sections[
+						i
+					].getElementsByClassName('tittle');
+					for (
+						let k =
+							children[j].offsetWidth -
+							sections[i].offsetWidth;
+						Math.floor(k) > 0;
+						k -= Math.ceil(charWidth)
+					) {
+						let divSquareLine = squareWithLine();
+						tittle[0].appendChild(divSquareLine);
+					}
+					sections[i].style.width =
+						(children[j].offsetWidth + 1).toString() +
+						'px';
+				}
+			}
+		}
+	}
+});
 
 function squareWithLine() {
 	let div = document.createElement('div');

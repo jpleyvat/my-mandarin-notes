@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1.0"
 		/>
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>My Mandarin Notes</title>
+		<title>我的中国普通话笔记</title>
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
@@ -23,13 +23,14 @@
                   character: '的',
                   meaning: 'Possession',
                   pronunciation: 'De'
-                }, 
-                {
+                }
+              ]);
+              pronounsSection.sameRow()
+              pronounsSection.createNote([{
                   character: '们',
                   meaning: '<Plural>',
                   pronunciation: 'Men'
-                }, 
-              ]);
+                }, ])
               pronounsSection.createNote([
                 {
                   character: '我',
@@ -66,66 +67,10 @@
                 }
               ]);
               pronounsSection.insertSpace()
-          </script>
+              pronounsSection.changeDirection()
+         </script>
           </div>
-          <!-- /PRONOUNS -->
-          <!-- PRONOUNS -->	
-          
-          <div id="verbs" class="section">
-            <div class="row">
-                <script>
-                  let verbsSection = new Section(verbs);
-                  verbsSection.createNote([
-                    {
-                      character: '的',
-                      meaning: 'Possession',
-                      pronunciation: 'De'
-                    }, 
-                    {
-                      character: '们',
-                      meaning: '<Plural>',
-                      pronunciation: 'Men'
-                    }, 
-                  ]);
-                  verbsSection.createNote([
-                    {
-                      character: '我',
-                      meaning: 'I, me',
-                      pronunciation: 'Wǒ'
-                    }
-                  ]);
-                  verbsSection.createNote([
-                    {
-                      character: '你',
-                      meaning: 'You',
-                      pronunciation: 'Nǐ'
-                    }
-                  ]);
-                  verbsSection.createNote([
-                    {
-                      character: '他',
-                      meaning: 'He, him',
-                      pronunciation: 'Tā'
-                    }
-                  ]);
-                  verbsSection.createNote([
-                    {
-                      character: '她',
-                      meaning: 'She, her',
-                      pronunciation: 'Tā'
-                    }
-                  ]);
-                  verbsSection.createNote([
-                    {
-                      character: '它',
-                      meaning: 'It',
-                      pronunciation: 'Tā'
-                    }
-                  ]);
-              </script>
-              </div>
-          </div>
-            <!-- /PRONOUNS -->	
+          <!-- /PRONOUNS -->	
       </div>
 			</div>
 		</div>

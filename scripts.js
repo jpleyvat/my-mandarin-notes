@@ -1,6 +1,10 @@
 var Section = /** @class */ (function () {
     function Section(sectionName) {
         this.sectionName = sectionName;
+        this.keepRow = false;
+        // Global constants
+        this.row = this.createDiv();
+        this.row.classList.add('row');
         // Elements asignment
         var _a = [
             this.createDiv(),
@@ -25,10 +29,17 @@ var Section = /** @class */ (function () {
             divTittle.appendChild(div2),
             sectionName.appendChild(divTittle);
     }
-    Section.prototype.createDiv = function () {
-        return document.createElement('div');
-    };
     Section.prototype.createNote = function (noteData, classes) {
+        if (this.keepRow) {
+            this.sectionName.appendChild(this.row);
+            this.keepRow = false;
+        }
+        else {
+            var newRow = this.createDiv();
+            newRow.classList.add('row');
+            this.row = newRow;
+            this.sectionName.appendChild(this.row);
+        }
         if (noteData.length === 1) {
             if (classes) {
                 this.formatNote(noteData[0], classes);
@@ -40,7 +51,7 @@ var Section = /** @class */ (function () {
         else {
             var wordBody = this.createDiv();
             wordBody.classList.add('word-note');
-            this.sectionName.appendChild(wordBody);
+            this.row.appendChild(wordBody);
             for (var i = 0; i < noteData.length; i++) {
                 if (classes) {
                     this.formatNote(noteData[i], wordBody, classes);
@@ -54,7 +65,7 @@ var Section = /** @class */ (function () {
     Section.prototype.formatNote = function (noteData, wordBody, classes) {
         var noteBody = this.createDiv();
         noteBody.classList.add('character-note');
-        this.sectionName.appendChild(noteBody);
+        this.row.appendChild(noteBody);
         var note = [
             {
                 element: document.createElement('p'),
@@ -101,41 +112,39 @@ var Section = /** @class */ (function () {
             }
         ]);
     };
+    Section.prototype.sameRow = function () {
+        this.keepRow = true;
+    };
+    Section.prototype.changeDirection = function () {
+        this.sectionName.style.flexDirection = 'row';
+    };
+    Section.prototype.createDiv = function () {
+        return document.createElement('div');
+    };
     return Section;
 }());
-// document.addEventListener('DOMContentLoaded', function getWidths() {
-// 	let sections: any = document.getElementsByClassName('section');
-// 	for (let i = 0; i < sections.length; i++) {
-// 		let children: any = sections[i].childNodes;
-// 		for (let j = 0; j < children.length; j++) {
-// 			if (children[j].offsetWidth) {
-// 				if (
-// 					children[j].offsetWidth > sections[i].offsetWidth
-// 				) {
-// 					let charWidth = sections[i].offsetWidth / 2;
-// 					let tittle: any = sections[
-// 						i
-// 					].getElementsByClassName('tittle');
-// 					for (
-// 						let k =
-// 							children[j].offsetWidth -
-// 							sections[i].offsetWidth;
-// 						Math.floor(k) > 0;
-// 						k -= Math.ceil(charWidth)
-// 					) {
-// 						let divSquareLine = squareWithLine();
-// 						tittle[0].appendChild(divSquareLine);
-// 					}
-// 					console.log(tittle);
-// 					sections[i].style.width =
-// 						(children[j].offsetWidth + 1).toString() +
-// 						'px';
-// 					sections[i].style.flexDirection = 'row';
-// 				}
-// 			}
-// 		}
-// 	}
-// });
+document.addEventListener('DOMContentLoaded', function getWidths() {
+    var sections = document.getElementsByClassName('section');
+    for (var i = 0; i < sections.length; i++) {
+        var children = sections[i].childNodes;
+        for (var j = 0; j < children.length; j++) {
+            if (children[j].offsetWidth) {
+                if (children[j].offsetWidth > sections[i].offsetWidth) {
+                    var charWidth = sections[i].offsetWidth / 2;
+                    var tittle = sections[i].getElementsByClassName('tittle');
+                    for (var k = children[j].offsetWidth -
+                        sections[i].offsetWidth; Math.floor(k) > 0; k -= Math.ceil(charWidth)) {
+                        var divSquareLine = squareWithLine();
+                        tittle[0].appendChild(divSquareLine);
+                    }
+                    sections[i].style.width =
+                        (children[j].offsetWidth + 1).toString() +
+                            'px';
+                }
+            }
+        }
+    }
+});
 function squareWithLine() {
     var div = document.createElement('div');
     div.classList.add('square');

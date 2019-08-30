@@ -45,6 +45,8 @@
   z-index: 1;
 }
 .section .word-note {
+  border-top: #add8e6 2px solid;
+  border-bottom: #add8e6 2px solid;
   display: inherit;
   flex-direction: row;
   flex-wrap: nowrap;
