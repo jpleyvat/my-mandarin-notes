@@ -29,6 +29,19 @@ fontSize = 'calc(%s / 4)' % characterSize
   transform: translate(-50%)
   width: pageWidth
 
+.column
+  display: inherit
+  flex-direction: column
+  flex-wrap: nowrap
+  max-height: pageHeight
+
+.row
+  display: inherit
+  flex-direction: row
+  flex-wrap: nowrap
+  max-height: pageWidth
+
+
 .section
   align-items: stretch
   // border-right: lightblue 2px solid 
@@ -44,7 +57,6 @@ fontSize = 'calc(%s / 4)' % characterSize
     // border-bottom: lightblue 2px solid
     display: inherit
     flex-direction: row
-    // height: 'calc(%s * 2)' % characterSize
     flex-wrap: nowrap
 
   & .character-note
@@ -77,6 +89,8 @@ fontSize = 'calc(%s / 4)' % characterSize
     &.tittle
       align-items: center
       border: none 
+      border-top: salmon  3px solid
+      border-bottom: salmon  3px solid
       display: inherit 
       height: characterSize
       justify-content: start

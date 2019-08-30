@@ -24,6 +24,18 @@
   transform: translate(-50%);
   width: calc(0.75609756097560975609756097560976 * 98vh);
 }
+.column {
+  display: inherit;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-height: 98vh;
+}
+.row {
+  display: inherit;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  max-height: calc(0.75609756097560975609756097560976 * 98vh);
+}
 .section {
   align-items: stretch;
   display: inherit;
@@ -67,6 +79,8 @@
 .section .square.tittle {
   align-items: center;
   border: none;
+  border-top: #fa8072 3px solid;
+  border-bottom: #fa8072 3px solid;
   display: inherit;
   height: calc(2 / 41 * 98vh);
   justify-content: start;

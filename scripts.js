@@ -28,23 +28,30 @@ var Section = /** @class */ (function () {
     Section.prototype.createDiv = function () {
         return document.createElement('div');
     };
-    Section.prototype.createNote = function (noteData) {
+    Section.prototype.createNote = function (noteData, classes) {
         if (noteData.length === 1) {
-            // let noteBody = this.createDiv();
-            // noteBody.classList.add('character-note');
-            // this.sectionName.appendChild(noteBody);
-            this.formatNote(noteData[0]);
+            if (classes) {
+                this.formatNote(noteData[0], classes);
+            }
+            else {
+                this.formatNote(noteData[0]);
+            }
         }
         else {
             var wordBody = this.createDiv();
             wordBody.classList.add('word-note');
             this.sectionName.appendChild(wordBody);
             for (var i = 0; i < noteData.length; i++) {
-                this.formatNote(noteData[i], wordBody);
+                if (classes) {
+                    this.formatNote(noteData[i], wordBody, classes);
+                }
+                else {
+                    this.formatNote(noteData[i], wordBody);
+                }
             }
         }
     };
-    Section.prototype.formatNote = function (noteData, wordBody) {
+    Section.prototype.formatNote = function (noteData, wordBody, classes) {
         var noteBody = this.createDiv();
         noteBody.classList.add('character-note');
         this.sectionName.appendChild(noteBody);
@@ -85,30 +92,55 @@ var Section = /** @class */ (function () {
         }
         parent.appendChild(div);
     };
-    Section.prototype.inserSpace = function () {
+    Section.prototype.insertSpace = function () {
         this.createNote([
             {
-                character: null,
-                meaning: null,
-                pronunciation: null
+                character: '',
+                meaning: '',
+                pronunciation: ''
             }
         ]);
     };
     return Section;
 }());
-document.addEventListener('DOMContentLoaded', function getWidths() {
-    var sections = document.getElementsByClassName('section');
-    for (var i = 0; i < sections.length; i++) {
-        var children = sections[i].childNodes;
-        for (var j = 0; j < children.length; j++) {
-            if (children[j].offsetWidth) {
-                if (children[j].offsetWidth > sections[i].offsetWidth) {
-                    sections[i].style.width =
-                        (children[j].offsetWidth + 1).toString() +
-                            'px';
-                    sections[i].style.flexDirection = 'row';
-                }
-            }
-        }
-    }
-});
+// document.addEventListener('DOMContentLoaded', function getWidths() {
+// 	let sections: any = document.getElementsByClassName('section');
+// 	for (let i = 0; i < sections.length; i++) {
+// 		let children: any = sections[i].childNodes;
+// 		for (let j = 0; j < children.length; j++) {
+// 			if (children[j].offsetWidth) {
+// 				if (
+// 					children[j].offsetWidth > sections[i].offsetWidth
+// 				) {
+// 					let charWidth = sections[i].offsetWidth / 2;
+// 					let tittle: any = sections[
+// 						i
+// 					].getElementsByClassName('tittle');
+// 					for (
+// 						let k =
+// 							children[j].offsetWidth -
+// 							sections[i].offsetWidth;
+// 						Math.floor(k) > 0;
+// 						k -= Math.ceil(charWidth)
+// 					) {
+// 						let divSquareLine = squareWithLine();
+// 						tittle[0].appendChild(divSquareLine);
+// 					}
+// 					console.log(tittle);
+// 					sections[i].style.width =
+// 						(children[j].offsetWidth + 1).toString() +
+// 						'px';
+// 					sections[i].style.flexDirection = 'row';
+// 				}
+// 			}
+// 		}
+// 	}
+// });
+function squareWithLine() {
+    var div = document.createElement('div');
+    div.classList.add('square');
+    var line = document.createElement('div');
+    line.classList.add('line');
+    div.appendChild(line);
+    return div;
+}
