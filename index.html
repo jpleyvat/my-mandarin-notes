@@ -11,24 +11,62 @@
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
-		<script src="script.js"></script>
+		<script src="scripts.js"></script>
 		<div id="page" class="page">
+      <!-- PRONOUNS -->	
 			<div id="pronouns" class="section">
 				<script>
-					// section = pronouns;
-					let pronounsSection = new section(pronouns);
-					pronounsSection.createNote('我', 'I', 'Wǒ');
-					pronounsSection.createNote('你', 'you', 'Nǐ');
-				</script>
+          let pronounsSection = new Section(pronouns);
+          pronounsSection.createNote([
+						{
+							character: '的',
+							meaning: '<Possession>',
+							pronunciation: 'De'
+            }, 
+            {
+							character: '们',
+							meaning: '<Plural>',
+							pronunciation: 'Men'
+            }, 
+          ]);
+          pronounsSection.createNote([
+						{
+							character: '我',
+							meaning: 'I, me',
+							pronunciation: 'Wǒ'
+            }
+          ]);
+          pronounsSection.createNote([
+						{
+							character: '你',
+							meaning: 'You',
+							pronunciation: 'Nǐ'
+            }
+          ]);
+          pronounsSection.createNote([
+						{
+							character: '他',
+							meaning: 'He, him',
+							pronunciation: 'Tā'
+            }
+          ]);
+          pronounsSection.createNote([
+						{
+							character: '她',
+							meaning: 'She, her',
+							pronunciation: 'Tā'
+            }
+          ]);
+          pronounsSection.createNote([
+						{
+							character: '它',
+							meaning: 'It',
+							pronunciation: 'Tā'
+            }
+          ]);
+      </script>
 			</div>
-			<!-- /PRONOUNS -->
-
-			<div id="verbs" class="section">
-				<script>
-					let verbsSection = new section(verbs);
-					verbsSection.createNote('我', 'I', 'Wǒ');
-					verbsSection.createNote('你', 'you', 'Nǐ');
-				</script>
+      <!-- /PRONOUNS -->	
 			</div>
 		</div>
 	</body>

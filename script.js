@@ -1,6 +1,7 @@
-class section {
+class Section {
 	constructor(section) {
 		this.section = section;
+
 		// Elements asignment
 		let [divTittle, div, div2, line, line2, tittle] = [
 			this.createDiv(),
