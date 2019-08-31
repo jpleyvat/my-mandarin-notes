@@ -1,6 +1,7 @@
 var Section = /** @class */ (function () {
-    function Section(sectionName) {
+    function Section(sectionName, spaces) {
         this.sectionName = sectionName;
+        this.spaces = spaces;
         this.keepRow = false;
         // Global constants
         this.row = this.createDiv();
@@ -29,7 +30,95 @@ var Section = /** @class */ (function () {
             divTittle.appendChild(div2),
             sectionName.appendChild(divTittle);
     }
-    Section.prototype.createNote = function (noteData, classes) {
+    Section.prototype.charNote = function (noteData, classes) {
+        this.setRow();
+        if (classes) {
+            this.formatNote('character', noteData, classes);
+        }
+        else {
+            this.formatNote('character', noteData);
+        }
+    };
+    Section.prototype.wordNote = function (noteData, wordMeaning, classes) {
+        this.setRow();
+        var wordBody = this.createDiv();
+        wordBody.classList.add('word-note');
+        this.row.appendChild(wordBody);
+        for (var i = 0; i < noteData.length; i++) {
+            if (classes) {
+                this.formatNote('word', noteData[i], wordBody, classes);
+            }
+            else {
+                this.formatNote('word', noteData[i], wordBody);
+            }
+        }
+        this.formatNote('word-meaning', null, wordBody, null, wordMeaning);
+    };
+    Section.prototype.formatNote = function (type, noteData, wordBody, classes, wordMeaning) {
+        var noteBody = this.createDiv();
+        this.row.appendChild(noteBody);
+        var note;
+        switch (type) {
+            case 'character':
+                noteBody.classList.add('character-note');
+                note = [
+                    {
+                        element: document.createElement('p'),
+                        elementClass: 'character'
+                    },
+                    {
+                        element: document.createTextNode(noteData.meaning),
+                        elementClass: 'meaning'
+                    },
+                    {
+                        element: document.createTextNode(noteData.pronunciation),
+                        elementClass: 'pronunciation'
+                    },
+                    { element: null, elementClass: 'space' }
+                ];
+                note[0].element.appendChild(document.createTextNode(noteData.character));
+                for (var i = 0; i < note.length; i++) {
+                    this.appendElement(noteBody, note[i].element, note[i].elementClass);
+                }
+                if (wordBody) {
+                    wordBody.appendChild(noteBody);
+                }
+                break;
+            case 'word':
+                noteBody.classList.add('word-character-note');
+                var characterTag = document.createElement('p');
+                var pronunciationTag = document.createElement('p');
+                characterTag.appendChild(document.createTextNode(noteData.character));
+                pronunciationTag.appendChild(document.createTextNode(noteData.pronunciation));
+                this.appendElement(noteBody, characterTag, 'character');
+                this.appendElement(noteBody, pronunciationTag, 'pronunciation');
+                wordBody.appendChild(noteBody);
+                break;
+            case 'word-meaning':
+                noteBody.classList.add('word-character-note');
+                var meaningTag = document.createElement('p');
+                meaningTag.appendChild(document.createTextNode(wordMeaning));
+                this.appendElement(noteBody, meaningTag, 'meaning');
+                wordBody.appendChild(noteBody);
+                this.appendElement(noteBody, null, 'space');
+                break;
+        }
+    };
+    Section.prototype.appendElement = function (parent, elementToAdd, classToAdd) {
+        var div = document.createElement('div');
+        div.classList.add('square');
+        var line = document.createElement('div');
+        line.classList.add('line');
+        div.appendChild(line);
+        if (elementToAdd) {
+            div.appendChild(elementToAdd);
+        }
+        if (classToAdd) {
+            div.classList.add(classToAdd);
+        }
+        parent.appendChild(div);
+    };
+    Section.prototype.setRow = function () {
         if (this.keepRow) {
             this.sectionName.appendChild(this.row);
             this.keepRow = false;
@@ -40,77 +129,19 @@ var Section = /** @class */ (function () {
             this.row = newRow;
             this.sectionName.appendChild(this.row);
         }
-        if (noteData.length === 1) {
-            if (classes) {
-                this.formatNote(noteData[0], classes);
-            }
-            else {
-                this.formatNote(noteData[0]);
-            }
-        }
-        else {
-            var wordBody = this.createDiv();
-            wordBody.classList.add('word-note');
-            this.row.appendChild(wordBody);
-            for (var i = 0; i < noteData.length; i++) {
-                if (classes) {
-                    this.formatNote(noteData[i], wordBody, classes);
-                }
-                else {
-                    this.formatNote(noteData[i], wordBody);
-                }
-            }
-        }
-    };
-    Section.prototype.formatNote = function (noteData, wordBody, classes) {
-        var noteBody = this.createDiv();
-        noteBody.classList.add('character-note');
-        this.row.appendChild(noteBody);
-        var note = [
-            {
-                element: document.createElement('p'),
-                elementClass: 'character'
-            },
-            {
-                element: document.createTextNode(noteData.meaning),
-                elementClass: 'meaning'
-            },
-            {
-                element: document.createTextNode(noteData.pronunciation),
-                elementClass: 'pronunciation'
-            },
-            { element: null, elementClass: 'space' }
-        ];
-        note[0].element.appendChild(document.createTextNode(noteData.character));
-        for (var i = 0; i < note.length; i++) {
-            this.appendElement(noteBody, note[i].element, note[i].elementClass);
-        }
-        if (wordBody) {
-            wordBody.appendChild(noteBody);
-        }
-    };
-    Section.prototype.appendElement = function (parent, text, classToAdd) {
-        var div = document.createElement('div');
-        div.classList.add('square');
-        var line = document.createElement('div');
-        line.classList.add('line');
-        div.appendChild(line);
-        if (text) {
-            div.appendChild(text);
-        }
-        if (classToAdd) {
-            div.classList.add(classToAdd);
-        }
-        parent.appendChild(div);
     };
     Section.prototype.insertSpace = function () {
-        this.createNote([
-            {
-                character: '',
-                meaning: '',
-                pronunciation: ''
-            }
-        ]);
+        this.charNote({
+            character: '',
+            meaning: '',
+            pronunciation: ''
+        });
+    };
+    Section.prototype.insertHalfSpace = function () {
+        var wordBody = this.createDiv();
+        wordBody.classList.add('word-note');
+        this.row.appendChild(wordBody);
+        this.formatNote('word-meaning', null, wordBody, null, ' ');
     };
     Section.prototype.sameRow = function () {
         this.keepRow = true;
@@ -120,6 +151,13 @@ var Section = /** @class */ (function () {
     };
     Section.prototype.createDiv = function () {
         return document.createElement('div');
+    };
+    Section.prototype.indent = function () {
+        for (var i = 0; i < this.spaces; i++) {
+            this.insertSpace();
+            this.sameRow();
+        }
+        // this.keepRow = false;
     };
     return Section;
 }());
@@ -132,8 +170,10 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
                 if (children[j].offsetWidth > sections[i].offsetWidth) {
                     var charWidth = sections[i].offsetWidth / 2;
                     var tittle = sections[i].getElementsByClassName('tittle');
-                    for (var k = children[j].offsetWidth -
-                        sections[i].offsetWidth; Math.floor(k) > 0; k -= Math.ceil(charWidth)) {
+                    for (var k = 0; k <
+                        Math.floor((children[j].offsetWidth -
+                            sections[i].offsetWidth) /
+                            charWidth); k++) {
                         var divSquareLine = squareWithLine();
                         tittle[0].appendChild(divSquareLine);
                     }

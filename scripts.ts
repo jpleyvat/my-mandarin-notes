@@ -1,13 +1,13 @@
 interface MandarinNote {
 	character: string;
-	meaning: string;
+	meaning?: string;
 	pronunciation: string;
 }
 
 class Section {
 	keepRow: boolean = false;
 	row: any;
-	constructor(private sectionName) {
+	constructor(private sectionName, private spaces?: number) {
 		// Global constants
 		this.row = this.createDiv();
 		this.row.classList.add('row');
@@ -40,7 +40,149 @@ class Section {
 			sectionName.appendChild(divTittle);
 	}
 
-	createNote(noteData: MandarinNote[], classes?: string[]) {
+	charNote(noteData: MandarinNote, classes?: string[]) {
+		this.setRow();
+		if (classes) {
+			this.formatNote('character', noteData, classes);
+		} else {
+			this.formatNote('character', noteData);
+		}
+	}
+
+	wordNote(
+		noteData: MandarinNote[],
+		wordMeaning: string,
+		classes?: string[]
+	) {
+		this.setRow();
+		let wordBody = this.createDiv();
+		wordBody.classList.add('word-note');
+		this.row.appendChild(wordBody);
+		for (let i = 0; i < noteData.length; i++) {
+			if (classes) {
+				this.formatNote(
+					'word',
+					noteData[i],
+					wordBody,
+					classes
+				);
+			} else {
+				this.formatNote('word', noteData[i], wordBody);
+			}
+		}
+		this.formatNote(
+			'word-meaning',
+			null,
+			wordBody,
+			null,
+			wordMeaning
+		);
+	}
+
+	formatNote(
+		type: string,
+		noteData?: MandarinNote,
+		wordBody?: any,
+		classes?: string[],
+		wordMeaning?: string
+	) {
+		let noteBody = this.createDiv();
+		this.row.appendChild(noteBody);
+
+		let note: any;
+		switch (type) {
+			case 'character':
+				noteBody.classList.add('character-note');
+				note = [
+					{
+						element: document.createElement('p'),
+						elementClass: 'character'
+					},
+					{
+						element: document.createTextNode(
+							noteData.meaning
+						),
+						elementClass: 'meaning'
+					},
+					{
+						element: document.createTextNode(
+							noteData.pronunciation
+						),
+						elementClass: 'pronunciation'
+					},
+					{ element: null, elementClass: 'space' }
+				];
+				note[0].element.appendChild(
+					document.createTextNode(noteData.character)
+				);
+
+				for (let i = 0; i < note.length; i++) {
+					this.appendElement(
+						noteBody,
+						note[i].element,
+						note[i].elementClass
+					);
+				}
+				if (wordBody) {
+					wordBody.appendChild(noteBody);
+				}
+				break;
+			case 'word':
+				noteBody.classList.add('word-character-note');
+
+				let characterTag = document.createElement('p');
+				let pronunciationTag = document.createElement('p');
+
+				characterTag.appendChild(
+					document.createTextNode(noteData.character)
+				);
+				pronunciationTag.appendChild(
+					document.createTextNode(noteData.pronunciation)
+				);
+
+				this.appendElement(
+					noteBody,
+					characterTag,
+					'character'
+				);
+				this.appendElement(
+					noteBody,
+					pronunciationTag,
+					'pronunciation'
+				);
+
+				wordBody.appendChild(noteBody);
+
+				break;
+			case 'word-meaning':
+				noteBody.classList.add('word-character-note');
+				let meaningTag = document.createElement('p');
+				meaningTag.appendChild(
+					document.createTextNode(wordMeaning)
+				);
+				this.appendElement(noteBody, meaningTag, 'meaning');
+				wordBody.appendChild(noteBody);
+				this.appendElement(noteBody, null, 'space');
+				break;
+		}
+	}
+
+	appendElement(parent: any, elementToAdd: any, classToAdd: any) {
+		let div = document.createElement('div');
+		div.classList.add('square');
+		let line = document.createElement('div');
+		line.classList.add('line');
+		div.appendChild(line);
+		if (elementToAdd) {
+			div.appendChild(elementToAdd);
+		}
+		if (classToAdd) {
+			div.classList.add(classToAdd);
+		}
+		parent.appendChild(div);
+	}
+
+	setRow() {
 		if (this.keepRow) {
 			this.sectionName.appendChild(this.row);
 			this.keepRow = false;
@@ -50,92 +192,20 @@ class Section {
 			this.row = newRow;
 			this.sectionName.appendChild(this.row);
 		}
-		if (noteData.length === 1) {
-			if (classes) {
-				this.formatNote(noteData[0], classes);
-			} else {
-				this.formatNote(noteData[0]);
-			}
-		} else {
-			let wordBody = this.createDiv();
-			wordBody.classList.add('word-note');
-			this.row.appendChild(wordBody);
-			for (let i = 0; i < noteData.length; i++) {
-				if (classes) {
-					this.formatNote(noteData[i], wordBody, classes);
-				} else {
-					this.formatNote(noteData[i], wordBody);
-				}
-			}
-		}
-	}
-
-	formatNote(
-		noteData: MandarinNote,
-		wordBody?: any,
-		classes?: string[]
-	) {
-		let noteBody = this.createDiv();
-		noteBody.classList.add('character-note');
-
-		this.row.appendChild(noteBody);
-
-		let note = [
-			{
-				element: document.createElement('p'),
-				elementClass: 'character'
-			},
-			{
-				element: document.createTextNode(noteData.meaning),
-				elementClass: 'meaning'
-			},
-			{
-				element: document.createTextNode(
-					noteData.pronunciation
-				),
-				elementClass: 'pronunciation'
-			},
-			{ element: null, elementClass: 'space' }
-		];
-		note[0].element.appendChild(
-			document.createTextNode(noteData.character)
-		);
-
-		for (let i = 0; i < note.length; i++) {
-			this.appendElement(
-				noteBody,
-				note[i].element,
-				note[i].elementClass
-			);
-		}
-		if (wordBody) {
-			wordBody.appendChild(noteBody);
-		}
-	}
-
-	appendElement(parent, text, classToAdd) {
-		let div = document.createElement('div');
-		div.classList.add('square');
-		let line = document.createElement('div');
-		line.classList.add('line');
-		div.appendChild(line);
-		if (text) {
-			div.appendChild(text);
-		}
-		if (classToAdd) {
-			div.classList.add(classToAdd);
-		}
-		parent.appendChild(div);
 	}
 
 	insertSpace() {
-		this.createNote([
-			{
-				character: '',
-				meaning: '',
-				pronunciation: ''
-			}
-		]);
+		this.charNote({
+			character: '',
+			meaning: '',
+			pronunciation: ''
+		});
+	}
+	insertHalfSpace() {
+		let wordBody = this.createDiv();
+		wordBody.classList.add('word-note');
+		this.row.appendChild(wordBody);
+		this.formatNote('word-meaning', null, wordBody, null, ' ');
 	}
 
 	sameRow() {
@@ -148,6 +218,14 @@ class Section {
 
 	createDiv() {
 		return document.createElement('div');
+	}
+
+	indent() {
+		for (let i = 0; i < this.spaces; i++) {
+			this.insertSpace();
+			this.sameRow();
+		}
+		// this.keepRow = false;
 	}
 }
 
@@ -165,11 +243,14 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
 						i
 					].getElementsByClassName('tittle');
 					for (
-						let k =
-							children[j].offsetWidth -
-							sections[i].offsetWidth;
-						Math.floor(k) > 0;
-						k -= Math.ceil(charWidth)
+						let k = 0;
+						k <
+						Math.floor(
+							(children[j].offsetWidth -
+								sections[i].offsetWidth) /
+								charWidth
+						);
+						k++
 					) {
 						let divSquareLine = squareWithLine();
 						tittle[0].appendChild(divSquareLine);

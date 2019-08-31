@@ -1,78 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <meta charset="UTF-8" />
+		<meta charset="UTF-8" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1.0"
 		/>
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>我的中国普通话笔记</title>
+		<title>我的普通话中文笔记</title>
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
 		<script src="scripts.js"></script>
 		<div id="page" class="page">
-      <div class="column">
-          <!-- PRONOUNS -->	
-          <div id="pronouns" class="section">
-            <script>
-              let pronounsSection = new Section(pronouns);
-              pronounsSection.createNote([
-                {
-                  character: '的',
-                  meaning: 'Possession',
-                  pronunciation: 'De'
-                }
-              ]);
-              pronounsSection.sameRow()
-              pronounsSection.createNote([{
-                  character: '们',
-                  meaning: '<Plural>',
-                  pronunciation: 'Men'
-                }, ])
-              pronounsSection.createNote([
-                {
-                  character: '我',
-                  meaning: 'I, me',
-                  pronunciation: 'Wǒ'
-                }
-              ]);
-              pronounsSection.createNote([
-                {
-                  character: '你',
-                  meaning: 'You',
-                  pronunciation: 'Nǐ'
-                }
-              ]);
-              pronounsSection.createNote([
-                {
-                  character: '他',
-                  meaning: 'He, him',
-                  pronunciation: 'Tā'
-                }
-              ]);
-              pronounsSection.createNote([
-                {
-                  character: '她',
-                  meaning: 'She, her',
-                  pronunciation: 'Tā'
-                }
-              ]);
-              pronounsSection.createNote([
-                {
-                  character: '它',
-                  meaning: 'It',
-                  pronunciation: 'Tā'
-                }
-              ]);
-              pronounsSection.insertSpace()
-              pronounsSection.changeDirection()
-         </script>
-          </div>
-          <!-- /PRONOUNS -->	
-      </div>
+			<div class="column">
+				<!-- PRONOUNS -->
+				<div id="pronouns" class="section">
+					<script>
+						let pro = new Section(pronouns);
+						pro.charNote({
+							character: '我',
+							meaning: 'I, me',
+							pronunciation: 'Wǒ'
+						});
+						pro.sameRow();
+						pro.charNote({
+							character: '们',
+							meaning: 'Plural',
+							pronunciation: 'Men'
+						});
+						pro.charNote({
+							character: '你',
+							meaning: 'You',
+							pronunciation: 'Nǐ'
+						});
+						pro.sameRow();
+						pro.charNote({
+							character: '的',
+							meaning: 'Pos',
+							pronunciation: 'De'
+						});
+						pro.charNote({
+							character: '他',
+							meaning: 'He, him',
+							pronunciation: 'Tā'
+						});
+						pro.sameRow();
+						pro.insertSpace();
+						pro.charNote({
+							character: '她',
+							meaning: 'She, her',
+							pronunciation: 'Tā'
+						});
+						pro.sameRow();
+						pro.insertSpace();
+						pro.charNote({
+							character: '它',
+							meaning: 'It',
+							pronunciation: 'Tā'
+						});
+						pro.sameRow();
+						pro.insertSpace();
+					</script>
+				</div>
+				<!-- /PRONOUNS -->
+				<!-- WORDS -->
+				<div id="words" class="section">
+					<script>
+						let wo = new Section(words);
+						wo.charNote({
+							character: '好',
+							meaning: 'Good',
+							pronunciation: 'Hǎo'
+						});
+						wo.sameRow();
+
+						wo.wordNote(
+							[
+								{
+									character: '你',
+									meaning: 'You',
+									pronunciation: 'Nǐ'
+								},
+								{
+									character: '好',
+									meaning: 'Good',
+									pronunciation: 'Hǎo'
+								}
+							],
+							'Good Bye'
+						);
+						wo.sameRow();
+
+						wo.charNote({
+							character: '谢',
+							meaning: 'Thank',
+							pronunciation: 'Xiè'
+						});
+						wo.insertHalfSpace();
+						wo.charNote({
+							character: '很',
+							meaning: 'Very',
+							pronunciation: 'Hěn'
+						});
+						wo.sameRow();
+						wo.wordNote(
+							[
+								{
+									character: '不',
+									meaning: "No, don't",
+									pronunciation: 'Bù'
+								},
+								{
+									character: '客',
+									meaning: 'Guest, customer',
+									pronunciation: 'Kè'
+								},
+								{
+									character: '气',
+									meaning: 'air, breath, spirit',
+									pronunciation: 'Qì'
+								}
+							],
+							'You are welcome'
+						);
+						wo.sameRow();
+						wo.charNote({
+							character: '对',
+							meaning: 'Right',
+							pronunciation: 'Duì'
+						});
+						wo.charNote({
+							character: '也',
+							meaning: 'Also',
+							pronunciation: 'Yě'
+						});
+						wo.sameRow();
+						wo.wordNote(
+							[
+								{
+									character: '对',
+									pronunciation: 'Duì'
+								},
+								{
+									character: '不',
+									pronunciation: 'Bù'
+								},
+								{
+									character: '起',
+									pronunciation: 'Qǐ'
+								}
+							],
+							'I am sorry'
+						);
+						wo.charNote({
+							character: '忙',
+							meaning: 'Busy',
+							pronunciation: 'Máng'
+						});
+						wo.sameRow();
+						wo.wordNote(
+							[
+								{
+									character: '没',
+									pronunciation: 'méi'
+								},
+								{
+									character: '关',
+									pronunciation: 'guān'
+								},
+								{
+									character: '系',
+									pronunciation: 'xì'
+								}
+							],
+							'No worries'
+						);
+					</script>
+				</div>
+				<!-- /WORDS -->
 			</div>
+			<div class="column">
+				<!-- QUESTIONS -->
+				<div id="questions" class="section">
+					<script>
+						let que = new Section(questions, 1);
+						que.indent();
+						que.charNote({
+							character: '呢',
+							pronunciation: 'Ne',
+							meaning: 'And you?'
+						});
+						que.sameRow();
+						que.wordNote(
+							[
+								{
+									character: '什',
+									pronunciation: 'Shén'
+								},
+								{
+									character: '么',
+									pronunciation: 'Me'
+								}
+							],
+							'what'
+						);
+						que.sameRow();
+						que.wordNote(
+							[
+								{
+									character: '如',
+									pronunciation: 'Rú'
+								},
+								{
+									character: '何',
+									pronunciation: 'hé'
+								}
+							],
+							'How'
+						);
+						que.insertSpace();
+						que.insertSpace();
+						que.insertSpace();
+						que.insertSpace();
+					</script>
+				</div>
+				<!-- /QUESTIONS -->
+				<!-- VERBS -->
+				<div id="verbs" class="section">
+					<script>
+						let ve = new Section(verbs, 4);
+						ve.indent();
+						ve.charNote({
+							character: '叫',
+							meaning: 'Call',
+							pronunciation: 'Jiào'
+						});
+						ve.indent();
+						ve.charNote({
+							character: '叫',
+							meaning: 'Live',
+							pronunciation: 'Zhù'
+						});
+					</script>
+				</div>
+				<!-- /VERBS -->
+			</div>
+			<div class="column"></div>
+			<div class="column"></div>
 		</div>
 	</body>
 </html>

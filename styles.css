@@ -29,6 +29,7 @@
   flex-direction: column;
   flex-wrap: nowrap;
   max-height: 98vh;
+  width: calc(calc(2 / 41 * 98vh) * 2);
 }
 .row {
   display: inherit;
@@ -38,6 +39,7 @@
 }
 .section {
   align-items: stretch;
+  border-right: #add8e6 2px solid;
   display: inherit;
   flex-direction: column;
   flex-wrap: wrap;
@@ -45,8 +47,6 @@
   z-index: 1;
 }
 .section .word-note {
-  border-top: #add8e6 2px solid;
-  border-bottom: #add8e6 2px solid;
   display: inherit;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -54,6 +54,11 @@
 .section .character-note {
   display: inherit;
   width: calc(calc(2 / 41 * 98vh) * 2);
+  flex-wrap: wrap;
+}
+.section .word-character-note {
+  display: inherit;
+  width: calc(calc(2 / 41 * 98vh) );
   flex-wrap: wrap;
 }
 .section .square {
@@ -95,9 +100,10 @@
 }
 .section .square.tittle h1 {
   font-size: 1.25rem;
+  margin-right: 2rem;
   position: absolute;
-  text-align: center;
-  width: 100%;
+  text-align: right;
+  width: calc(100% - 2rem);
   z-index: 2;
 }
 .section .square.character {
@@ -109,9 +115,18 @@
   z-index: 1;
 }
 .section .square.meaning {
+  font-size: calc(calc(2 / 41 * 98vh) /2.5);
+  align-items: center;
+}
+.section .square.meaning p {
+  font-size: calc(calc(2 / 41 * 98vh) /2.5);
   align-items: center;
 }
 .section .square.pronunciation {
+  font-size: calc(calc(2 / 41 * 98vh) /2);
+  z-index: 1;
+}
+.section .square.pronunciation p {
   font-size: calc(calc(2 / 41 * 98vh) /2);
   z-index: 1;
 }

@@ -34,6 +34,7 @@ fontSize = 'calc(%s / 4)' % characterSize
   flex-direction: column
   flex-wrap: nowrap
   max-height: pageHeight
+  width: 'calc(%s * 2)' % characterSize
 
 .row
   display: inherit
@@ -44,7 +45,7 @@ fontSize = 'calc(%s / 4)' % characterSize
 
 .section
   align-items: stretch
-  // border-right: lightblue 2px solid 
+  border-right: lightblue 2px solid 
   // border-top: lightblue 2px solid 
   display: inherit 
   flex-direction: column 
@@ -53,8 +54,9 @@ fontSize = 'calc(%s / 4)' % characterSize
   z-index: 1
 
   & .word-note
-    border-top: lightblue 2px solid
-    border-bottom: lightblue 2px solid
+    // background-color: #E3E5E6
+    // border-top: lightblue 2px solid
+    // border-bottom: lightblue 2px solid
     display: inherit
     flex-direction: row
     flex-wrap: nowrap
@@ -63,6 +65,11 @@ fontSize = 'calc(%s / 4)' % characterSize
     display: inherit
     // height: 'calc(%s * 2)' % characterSize
     width: 'calc(%s * 2)' % characterSize
+    flex-wrap: wrap
+   & .word-character-note
+    display: inherit
+    // height: 'calc(%s * 2)' % characterSize
+    width: 'calc(%s )' % characterSize
     flex-wrap: wrap
 
   & .square
@@ -102,9 +109,10 @@ fontSize = 'calc(%s / 4)' % characterSize
 
       & h1
         font-size: 1.25rem
+        margin-right: 2rem 
         position: absolute
-        text-align: center
-        width: 100%
+        text-align: right
+        width: calc(100% - 2rem)
         z-index: 2
 
     &.character
@@ -115,11 +123,18 @@ fontSize = 'calc(%s / 4)' % characterSize
         z-index: 1
 
     &.meaning
+      font-size: 'calc(%s /2.5)' % characterSize
       align-items: center
+      & p
+        font-size: 'calc(%s /2.5)' % characterSize
+        align-items: center
       
     &.pronunciation
       font-size: 'calc(%s /2)' % characterSize
       z-index: 1
+      & p
+        font-size: 'calc(%s /2)' % characterSize
+        z-index: 1
 
 
   
