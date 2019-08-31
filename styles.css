@@ -1,18 +1,28 @@
+.indent-space >* {
+  border: none;
+}
+.indent-space >* >* {
+  opacity: 0;
+  height: 0;
+}
 * {
   box-sizing: border-box;
-  font-size: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) / 4);
+  font-size: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) / 4);
   margin: 0;
   padding: 0;
 }
+body {
+  font-size: calc(calc(98vw - 3vw * 2) * 2 / 31);
+}
 .page {
-  align-self: auto;
   align-items: flex-start;
+  align-self: auto;
   border: #808080 1px solid;
   box-shadow: 5px 5px 5px #c0c0c0, -5px -5px 5px #c0c0c0;
   display: flex;
   height: calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2));
   margin: 3vw;
-  padding: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) / 4);
+  padding: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) / 4);
   position: absolute;
   width: calc(98vw - 3vw * 2);
 }
@@ -21,7 +31,7 @@
   flex-direction: column;
   flex-wrap: nowrap;
   max-height: calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2));
-  width: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) * 2);
+  width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) * 2);
 }
 .row {
   display: inherit;
@@ -30,35 +40,35 @@
   max-height: calc(98vw - 3vw * 2);
 }
 .section {
-  align-items: stretch;
   border-right: #add8e6 2px solid;
   display: inherit;
   flex-direction: column;
   flex-wrap: wrap;
-  width: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) * 2);
+  width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) * 2);
   z-index: 1;
 }
 .section .word-note {
   display: inherit;
   flex-direction: row;
   flex-wrap: nowrap;
+  min-width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31));
 }
 .section .character-note {
   display: inherit;
-  width: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) * 2);
+  width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) * 2);
   flex-wrap: wrap;
 }
 .section .word-character-note {
   display: inherit;
-  width: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) );
+  width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) );
   flex-wrap: wrap;
 }
 .section .square {
   border-top: #add8e6 1px solid;
   border-right: #add8e6 1px solid;
   display: inherit;
-  height: calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2)));
-  width: calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2)));
+  height: calc(calc(98vw - 3vw * 2) * 2 / 31);
+  width: calc(calc(98vw - 3vw * 2) * 2 / 31);
   justify-content: center;
   z-index: 1;
   position: relative;
@@ -72,7 +82,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  width: calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2)));
+  width: calc(calc(98vw - 3vw * 2) * 2 / 31);
   z-index: -1;
 }
 .section .square.tittle {
@@ -81,11 +91,15 @@
   border-top: #fa8072 3px solid;
   border-bottom: #fa8072 3px solid;
   display: inherit;
-  height: calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2)));
+  height: calc(calc(98vw - 3vw * 2) * 2 / 31);
   justify-content: start;
   width: 100%;
   position: relative;
   z-index: 1;
+}
+.section .square.tittle:before {
+  border-top: none;
+  width: 100%;
 }
 .section .square.tittle .square {
   z-index: -1;
@@ -107,19 +121,18 @@
   z-index: 1;
 }
 .section .square.meaning {
-  font-size: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) /2.5);
   align-items: center;
 }
 .section .square.meaning p {
-  font-size: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) /2.5);
+  font-size: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) /2.5);
   align-items: center;
 }
 .section .square.pronunciation {
-  font-size: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) /2);
+  font-size: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) /2);
   z-index: 1;
 }
 .section .square.pronunciation p {
-  font-size: calc(calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2))) /2);
+  font-size: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) /2);
   z-index: 1;
 }
 .section .square .line {
@@ -127,5 +140,5 @@
   width: 1px;
   background: #add8e6;
   z-index: -1;
-  height: calc(2 / 41 * calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2)));
+  height: calc(calc(98vw - 3vw * 2) * 2 / 31);
 }

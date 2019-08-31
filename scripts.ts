@@ -103,6 +103,11 @@ class Section {
 				space: false
 			}
 		];
+		if (classes) {
+			for (let i = 0; i < classes.length; i++) {
+				noteBody.classList.add(classes[i]);
+			}
+		}
 		this.row.appendChild(noteBody);
 
 		if (noteData) {
@@ -206,7 +211,10 @@ class Section {
 		});
 	}
 
-	insertHalfSpace() {
+	insertHalfSpace(IndentSpace?: boolean) {
+		let invisible;
+		if (IndentSpace) invisible = 'indent-space';
+		else invisible = invisible = null;
 		let wordBody = this.createDiv();
 		wordBody.classList.add('word-note'),
 			this.row.appendChild(wordBody),
@@ -214,7 +222,7 @@ class Section {
 				'word-meaning',
 				null,
 				wordBody,
-				null,
+				[invisible],
 				' '
 			);
 	}
@@ -232,8 +240,20 @@ class Section {
 	}
 
 	indent() {
-		for (let i = 0; i < this.spaces * 2; i++) {
-			this.setRow(), this.insertHalfSpace(), this.sameRow();
+		let charWidth = Number(
+			window
+				.getComputedStyle(document.body)
+				.getPropertyValue('font-size')
+				.match(/\d+/)[0]
+		);
+		for (let i = 0; i < this.spaces; i++) {
+			let margin: string = this.sectionName.style.marginLeft;
+			let marginNumber: number = Number(
+				margin.replace('px', '')
+			);
+			(marginNumber += charWidth),
+				(this.sectionName.style.marginLeft =
+					String(marginNumber) + 'px');
 		}
 	}
 }

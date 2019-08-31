@@ -63,6 +63,11 @@ var Section = /** @class */ (function () {
                 space: false
             }
         ], noteBody = _a[0], characterTag = _a[1], pronunciationTag = _a[2], meaningTag = _a[3], appendlist = _a[4];
+        if (classes) {
+            for (var i = 0; i < classes.length; i++) {
+                noteBody.classList.add(classes[i]);
+            }
+        }
         this.row.appendChild(noteBody);
         if (noteData) {
             characterTag.appendChild(document.createTextNode(noteData.character)),
@@ -147,11 +152,16 @@ var Section = /** @class */ (function () {
             pronunciation: ''
         });
     };
-    Section.prototype.insertHalfSpace = function () {
+    Section.prototype.insertHalfSpace = function (IndentSpace) {
+        var invisible;
+        if (IndentSpace)
+            invisible = 'indent-space';
+        else
+            invisible = invisible = null;
         var wordBody = this.createDiv();
         wordBody.classList.add('word-note'),
             this.row.appendChild(wordBody),
-            this.formatNote('word-meaning', null, wordBody, null, ' ');
+            this.formatNote('word-meaning', null, wordBody, [invisible], ' ');
     };
     Section.prototype.sameRow = function () {
         this.keepRow = true;
@@ -163,8 +173,16 @@ var Section = /** @class */ (function () {
         return document.createElement('div');
     };
     Section.prototype.indent = function () {
-        for (var i = 0; i < this.spaces * 2; i++) {
-            this.setRow(), this.insertHalfSpace(), this.sameRow();
+        var charWidth = Number(window
+            .getComputedStyle(document.body)
+            .getPropertyValue('font-size')
+            .match(/\d+/)[0]);
+        for (var i = 0; i < this.spaces; i++) {
+            var margin = this.sectionName.style.marginLeft;
+            var marginNumber = Number(margin.replace('px', ''));
+            (marginNumber += charWidth),
+                (this.sectionName.style.marginLeft =
+                    String(marginNumber) + 'px');
         }
     };
     return Section;
