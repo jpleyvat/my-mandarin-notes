@@ -32,102 +32,112 @@ var Section = /** @class */ (function () {
     }
     Section.prototype.charNote = function (noteData, classes) {
         this.setRow();
-        if (classes) {
+        if (classes)
             this.formatNote('character', noteData, classes);
-        }
-        else {
+        else
             this.formatNote('character', noteData);
-        }
     };
     Section.prototype.wordNote = function (noteData, wordMeaning, classes) {
         this.setRow();
         var wordBody = this.createDiv();
-        wordBody.classList.add('word-note');
-        this.row.appendChild(wordBody);
+        wordBody.classList.add('word-note'),
+            this.row.appendChild(wordBody);
         for (var i = 0; i < noteData.length; i++) {
-            if (classes) {
+            if (classes)
                 this.formatNote('word', noteData[i], wordBody, classes);
-            }
-            else {
+            else
                 this.formatNote('word', noteData[i], wordBody);
-            }
         }
         this.formatNote('word-meaning', null, wordBody, null, wordMeaning);
     };
     Section.prototype.formatNote = function (type, noteData, wordBody, classes, wordMeaning) {
-        var noteBody = this.createDiv();
+        var _a = [
+            this.createDiv(),
+            document.createElement('p'),
+            document.createElement('p'),
+            document.createElement('p'),
+            {
+                character: false,
+                meaning: false,
+                pronunciation: false,
+                space: false
+            }
+        ], noteBody = _a[0], characterTag = _a[1], pronunciationTag = _a[2], meaningTag = _a[3], appendlist = _a[4];
         this.row.appendChild(noteBody);
-        var note;
+        if (noteData) {
+            characterTag.appendChild(document.createTextNode(noteData.character)),
+                pronunciationTag.appendChild(document.createTextNode(noteData.pronunciation));
+            if (noteData.meaning)
+                meaningTag.appendChild(document.createTextNode(noteData.meaning));
+        }
+        if (wordMeaning)
+            meaningTag.appendChild(document.createTextNode(wordMeaning));
         switch (type) {
             case 'character':
-                noteBody.classList.add('character-note');
-                note = [
-                    {
-                        element: document.createElement('p'),
-                        elementClass: 'character'
-                    },
-                    {
-                        element: document.createTextNode(noteData.meaning),
-                        elementClass: 'meaning'
-                    },
-                    {
-                        element: document.createTextNode(noteData.pronunciation),
-                        elementClass: 'pronunciation'
-                    },
-                    { element: null, elementClass: 'space' }
-                ];
-                note[0].element.appendChild(document.createTextNode(noteData.character));
-                for (var i = 0; i < note.length; i++) {
-                    this.appendElement(noteBody, note[i].element, note[i].elementClass);
-                }
-                if (wordBody) {
+                noteBody.classList.add('character-note'),
+                    (appendlist = {
+                        character: true,
+                        meaning: true,
+                        pronunciation: true,
+                        space: true
+                    });
+                if (wordBody)
                     wordBody.appendChild(noteBody);
-                }
                 break;
             case 'word':
-                noteBody.classList.add('word-character-note');
-                var characterTag = document.createElement('p');
-                var pronunciationTag = document.createElement('p');
-                characterTag.appendChild(document.createTextNode(noteData.character));
-                pronunciationTag.appendChild(document.createTextNode(noteData.pronunciation));
-                this.appendElement(noteBody, characterTag, 'character');
-                this.appendElement(noteBody, pronunciationTag, 'pronunciation');
-                wordBody.appendChild(noteBody);
+                noteBody.classList.add('word-character-note'),
+                    wordBody.appendChild(noteBody),
+                    (appendlist = {
+                        character: true,
+                        meaning: false,
+                        pronunciation: true,
+                        space: false
+                    });
                 break;
             case 'word-meaning':
-                noteBody.classList.add('word-character-note');
-                var meaningTag = document.createElement('p');
-                meaningTag.appendChild(document.createTextNode(wordMeaning));
-                this.appendElement(noteBody, meaningTag, 'meaning');
-                wordBody.appendChild(noteBody);
-                this.appendElement(noteBody, null, 'space');
+                noteBody.classList.add('word-character-note'),
+                    wordBody.appendChild(noteBody),
+                    (appendlist = {
+                        character: false,
+                        meaning: true,
+                        pronunciation: false,
+                        space: true
+                    });
                 break;
         }
+        if (appendlist.character)
+            this.appendElement(noteBody, characterTag, 'character');
+        if (appendlist.meaning)
+            this.appendElement(noteBody, meaningTag, 'meaning');
+        if (appendlist.pronunciation)
+            this.appendElement(noteBody, pronunciationTag, 'pronunciation');
+        if (appendlist.space)
+            this.appendElement(noteBody, null, 'space');
     };
     Section.prototype.appendElement = function (parent, elementToAdd, classToAdd) {
-        var div = document.createElement('div');
-        div.classList.add('square');
-        var line = document.createElement('div');
-        line.classList.add('line');
-        div.appendChild(line);
-        if (elementToAdd) {
+        var _a = [
+            document.createElement('div'),
+            document.createElement('div')
+        ], div = _a[0], line = _a[1];
+        div.classList.add('square'),
+            line.classList.add('line'),
+            div.appendChild(line);
+        if (elementToAdd)
             div.appendChild(elementToAdd);
-        }
-        if (classToAdd) {
+        if (classToAdd)
             div.classList.add(classToAdd);
-        }
         parent.appendChild(div);
     };
     Section.prototype.setRow = function () {
         if (this.keepRow) {
-            this.sectionName.appendChild(this.row);
-            this.keepRow = false;
+            this.sectionName.appendChild(this.row),
+                (this.keepRow = false);
         }
         else {
             var newRow = this.createDiv();
-            newRow.classList.add('row');
-            this.row = newRow;
-            this.sectionName.appendChild(this.row);
+            newRow.classList.add('row'),
+                (this.row = newRow),
+                this.sectionName.appendChild(this.row);
         }
     };
     Section.prototype.insertSpace = function () {
@@ -139,9 +149,9 @@ var Section = /** @class */ (function () {
     };
     Section.prototype.insertHalfSpace = function () {
         var wordBody = this.createDiv();
-        wordBody.classList.add('word-note');
-        this.row.appendChild(wordBody);
-        this.formatNote('word-meaning', null, wordBody, null, ' ');
+        wordBody.classList.add('word-note'),
+            this.row.appendChild(wordBody),
+            this.formatNote('word-meaning', null, wordBody, null, ' ');
     };
     Section.prototype.sameRow = function () {
         this.keepRow = true;
@@ -153,11 +163,9 @@ var Section = /** @class */ (function () {
         return document.createElement('div');
     };
     Section.prototype.indent = function () {
-        for (var i = 0; i < this.spaces; i++) {
-            this.insertSpace();
-            this.sameRow();
+        for (var i = 0; i < this.spaces * 2; i++) {
+            this.setRow(), this.insertHalfSpace(), this.sameRow();
         }
-        // this.keepRow = false;
     };
     return Section;
 }());
@@ -168,12 +176,14 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
         for (var j = 0; j < children.length; j++) {
             if (children[j].offsetWidth) {
                 if (children[j].offsetWidth > sections[i].offsetWidth) {
-                    var charWidth = sections[i].offsetWidth / 2;
-                    var tittle = sections[i].getElementsByClassName('tittle');
-                    for (var k = 0; k <
-                        Math.floor((children[j].offsetWidth -
-                            sections[i].offsetWidth) /
-                            charWidth); k++) {
+                    var _a = [
+                        sections[i].offsetWidth / 2,
+                        sections[i].getElementsByClassName('tittle')
+                    ], charWidth = _a[0], tittle = _a[1];
+                    var columnsToFill = Math.floor((children[j].offsetWidth -
+                        sections[i].offsetWidth) /
+                        charWidth);
+                    for (var k = 0; k < columnsToFill; k++) {
                         var divSquareLine = squareWithLine();
                         tittle[0].appendChild(divSquareLine);
                     }
@@ -186,10 +196,12 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
     }
 });
 function squareWithLine() {
-    var div = document.createElement('div');
-    div.classList.add('square');
-    var line = document.createElement('div');
-    line.classList.add('line');
-    div.appendChild(line);
+    var _a = [
+        document.createElement('div'),
+        document.createElement('div')
+    ], div = _a[0], line = _a[1];
+    div.classList.add('square'),
+        line.classList.add('line'),
+        div.appendChild(line);
     return div;
 }

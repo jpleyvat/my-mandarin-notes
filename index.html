@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<script src="scripts.js"></script>
-		<div id="page" class="page">
+		<div id="page1" class="page">
 			<div class="column">
 				<!-- PRONOUNS -->
 				<div id="pronouns" class="section">
@@ -74,7 +74,41 @@
 							pronunciation: 'Hǎo'
 						});
 						wo.sameRow();
-
+						wo.charNote({
+							character: '谢',
+							meaning: 'Thank',
+							pronunciation: 'Xiè'
+						});
+						wo.sameRow();
+						wo.insertHalfSpace();
+						wo.sameRow();
+						wo.wordNote(
+							[
+								{
+									character: '再',
+									pronunciation: 'Zài'
+								},
+								{
+									character: '见',
+									pronunciation: 'Jiàn'
+								}
+							],
+							'Goodbye'
+						);
+						wo.charNote({
+							character: '很',
+							meaning: 'Very',
+							pronunciation: 'Hěn'
+						});
+						wo.sameRow();
+						wo.charNote({
+							character: '对',
+							meaning: 'Right',
+							pronunciation: 'Duì'
+						});
+						wo.sameRow();
+						wo.insertHalfSpace();
+						wo.sameRow();
 						wo.wordNote(
 							[
 								{
@@ -88,21 +122,55 @@
 									pronunciation: 'Hǎo'
 								}
 							],
-							'Good Bye'
+							'Hello'
 						);
-						wo.sameRow();
 
 						wo.charNote({
-							character: '谢',
-							meaning: 'Thank',
-							pronunciation: 'Xiè'
+							character: '也',
+							meaning: 'Also',
+							pronunciation: 'Yě'
 						});
-						wo.insertHalfSpace();
+						wo.sameRow();
 						wo.charNote({
-							character: '很',
-							meaning: 'Very',
-							pronunciation: 'Hěn'
+							character: '忙',
+							meaning: 'Busy',
+							pronunciation: 'Máng'
 						});
+						wo.sameRow();
+						wo.wordNote(
+							[
+								{
+									character: '对',
+									pronunciation: 'Duì'
+								},
+								{
+									character: '不',
+									pronunciation: 'Bù'
+								},
+								{
+									character: '起',
+									pronunciation: 'Qǐ'
+								}
+							],
+							'I am sorry'
+						);
+						wo.wordNote(
+							[
+								{
+									character: '没',
+									pronunciation: 'méi'
+								},
+								{
+									character: '关',
+									pronunciation: 'guān'
+								},
+								{
+									character: '系',
+									pronunciation: 'xì'
+								}
+							],
+							'No worries'
+						);
 						wo.sameRow();
 						wo.wordNote(
 							[
@@ -123,58 +191,6 @@
 								}
 							],
 							'You are welcome'
-						);
-						wo.sameRow();
-						wo.charNote({
-							character: '对',
-							meaning: 'Right',
-							pronunciation: 'Duì'
-						});
-						wo.charNote({
-							character: '也',
-							meaning: 'Also',
-							pronunciation: 'Yě'
-						});
-						wo.sameRow();
-						wo.wordNote(
-							[
-								{
-									character: '对',
-									pronunciation: 'Duì'
-								},
-								{
-									character: '不',
-									pronunciation: 'Bù'
-								},
-								{
-									character: '起',
-									pronunciation: 'Qǐ'
-								}
-							],
-							'I am sorry'
-						);
-						wo.charNote({
-							character: '忙',
-							meaning: 'Busy',
-							pronunciation: 'Máng'
-						});
-						wo.sameRow();
-						wo.wordNote(
-							[
-								{
-									character: '没',
-									pronunciation: 'méi'
-								},
-								{
-									character: '关',
-									pronunciation: 'guān'
-								},
-								{
-									character: '系',
-									pronunciation: 'xì'
-								}
-							],
-							'No worries'
 						);
 					</script>
 				</div>
@@ -209,6 +225,20 @@
 						que.wordNote(
 							[
 								{
+									character: '哪',
+									pronunciation: 'Nǎ'
+								},
+								{
+									character: '儿',
+									pronunciation: 'Er'
+								}
+							],
+							'Where'
+						);
+						que.sameRow();
+						que.wordNote(
+							[
+								{
 									character: '如',
 									pronunciation: 'Rú'
 								},
@@ -219,7 +249,22 @@
 							],
 							'How'
 						);
+						que.indent();
 						que.insertSpace();
+						que.sameRow();
+						que.wordNote(
+							[
+								{
+									character: '多',
+									pronunciation: 'Duō'
+								},
+								{
+									character: '么',
+									pronunciation: 'Me'
+								}
+							],
+							'How'
+						);
 						que.insertSpace();
 						que.insertSpace();
 						que.insertSpace();
@@ -229,25 +274,70 @@
 				<!-- VERBS -->
 				<div id="verbs" class="section">
 					<script>
-						let ve = new Section(verbs, 4);
+						let ve = new Section(verbs, 3);
+						ve.indent();
+						ve.charNote({
+							character: '问',
+							meaning: 'Ask',
+							pronunciation: 'Wèn'
+						});
+						ve.sameRow();
+						ve.charNote({
+							character: '是',
+							meaning: 'Be, yes',
+							pronunciation: 'Shì'
+						});
+						ve.sameRow();
+						ve.wordNote(
+							[
+								{
+									character: '知',
+									pronunciation: 'Zhī'
+								},
+								{
+									character: '道',
+									pronunciation: 'Dào'
+								}
+							],
+							'Know'
+						);
 						ve.indent();
 						ve.charNote({
 							character: '叫',
 							meaning: 'Call',
 							pronunciation: 'Jiào'
 						});
+						ve.sameRow();
+						ve.charNote({
+							character: '喝',
+							meaning: 'Drink',
+							pronunciation: 'Hē'
+						});
+
 						ve.indent();
+						ve.charNote({
+							character: '吃',
+							meaning: 'Eat',
+							pronunciation: 'Chī'
+						});
+						ve.sameRow();
 						ve.charNote({
 							character: '叫',
 							meaning: 'Live',
 							pronunciation: 'Zhù'
+						});
+						ve.indent();
+						ve.charNote({
+							character: '见',
+							meaning: 'See, meet',
+							pronunciation: 'Jiàn'
 						});
 					</script>
 				</div>
 				<!-- /VERBS -->
 			</div>
 			<div class="column"></div>
-			<div class="column"></div>
 		</div>
+		<div id="page2" class="page"></div>
 	</body>
 </html>
