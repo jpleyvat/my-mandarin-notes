@@ -1,5 +1,6 @@
-pageHeight = 1270px
-pageWidth  = 'calc(0.75609756097560975609756097560976 * %s)' % (pageHeight)
+margin = 3vw
+pageWidth  = 'calc(98vw - %s * 2)' %margin
+pageHeight = 'calc(1.3225806451612903225806451612903 * %s)' % (pageWidth)
 characterSize = 'calc(2 / 41 * %s)'  % pageHeight
 fontSize = 'calc(%s / 4)' % characterSize
 
@@ -9,24 +10,19 @@ fontSize = 'calc(%s / 4)' % characterSize
   margin: 0
   padding: 0
 
-.line 
-  position: absolute
-  width: 1px
-  background: lightblue
-  z-index: -1
-  height: characterSize
-
 .page
+  align-self: auto
   align-items: flex-start
   border: gray 1px solid 
   box-shadow: 5px 5px 5px silver, -5px -5px 5px silver
-  display: flex
+  display: flex 
   height: pageHeight
-  left: 50%
-  // margin: auto
+  margin: margin
+  // left: 50%
+  // margin-top:'calc(%s / 20)' %pageHeight
   padding: 'calc(%s / 4)' % characterSize 
   position: absolute
-  transform: translate(-50%)
+  // transform: translate(-50%)
   width: pageWidth
 
 .column
@@ -91,8 +87,7 @@ fontSize = 'calc(%s / 4)' % characterSize
         right: 0 
         bottom: 0
         width: characterSize
-        z-index: -1
-    
+        z-index: -1    
     &.tittle
       align-items: center
       border: none 
@@ -135,6 +130,13 @@ fontSize = 'calc(%s / 4)' % characterSize
       & p
         font-size: 'calc(%s /2)' % characterSize
         z-index: 1
+
+    & .line 
+      position: absolute
+      width: 1px
+      background: lightblue
+      z-index: -1
+      height: characterSize
 
 
   
