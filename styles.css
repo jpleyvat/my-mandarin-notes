@@ -116,7 +116,7 @@ body {
   align-items: center;
 }
 .section .square.character p {
-  font-size: 2.75vw;
+  font-size: 4vw;
   position: absolute;
   z-index: 1;
 }
@@ -124,7 +124,7 @@ body {
   align-items: center;
 }
 .section .square.meaning p {
-  font-size: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) /2.5);
+  font-size: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) /3.25);
   align-items: center;
 }
 .section .square.pronunciation {
