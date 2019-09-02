@@ -14,6 +14,32 @@
 body {
   font-size: calc(calc(98vw - 3vw * 2) * 2 / 31);
 }
+ul#pages {
+  align-items: center;
+  background-color: #fff;
+  display: flex;
+  height: 2rem;
+  justify-content: flex-end;
+  position: fixed;
+  top: calc(100% - 2rem);
+  width: 100%;
+  z-index: 5;
+}
+ul li {
+  align-items: center;
+  background-color: #fa8072;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  height: 2rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0 1rem 0 1rem;
+  width: 2rem;
+}
 .page {
   align-items: flex-start;
   align-self: auto;
@@ -46,6 +72,13 @@ body {
   flex-wrap: wrap;
   width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) * 2);
   z-index: 1;
+}
+.section .quarter-space {
+  display: inherit;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  min-width: calc(calc(calc(98vw - 3vw * 2) * 2 / 31));
+  height: calc(calc(98vw - 3vw * 2) * 2 / 31);
 }
 .section .word-note {
   display: inherit;

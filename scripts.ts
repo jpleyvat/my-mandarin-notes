@@ -5,12 +5,14 @@ interface MandarinNote {
 }
 
 class Section {
+	sectionName: HTMLElement;
 	keepRow: boolean = false;
 	row: any;
-	constructor(
-		private sectionName: HTMLElement,
-		private spaces?: number
-	) {
+	constructor(private spaces?: number) {
+		this.sectionName =
+			document.scripts[
+				document.scripts.length - 1
+			].parentElement;
 		// Global constants
 		this.row = this.createDiv();
 		this.row.classList.add('row');
@@ -36,12 +38,14 @@ class Section {
 		div.appendChild(line),
 			div2.appendChild(line2),
 			tittle.appendChild(
-				document.createTextNode(sectionName.id.toUpperCase())
+				document.createTextNode(
+					this.sectionName.id.toUpperCase()
+				)
 			),
 			divTittle.appendChild(div),
 			divTittle.appendChild(tittle),
 			divTittle.appendChild(div2),
-			sectionName.appendChild(divTittle);
+			this.sectionName.appendChild(divTittle);
 	}
 
 	charNote(noteData: MandarinNote, classes?: string[]) {
@@ -160,6 +164,16 @@ class Section {
 						space: true
 					});
 				break;
+			case 'quarter-space':
+				noteBody.classList.add('word-character-note'),
+					wordBody.appendChild(noteBody),
+					(appendlist = {
+						character: false,
+						meaning: false,
+						pronunciation: false,
+						space: true
+					});
+				break;
 		}
 
 		if (appendlist.character)
@@ -226,6 +240,30 @@ class Section {
 				' '
 			);
 	}
+	insertQuarterSpace(IndentSpace?: boolean) {
+		this.setRow();
+		let invisible: string;
+		if (IndentSpace) invisible = 'indent-space';
+		else invisible = invisible = null;
+		let wordBody = this.createDiv();
+		this.row.appendChild(wordBody);
+		wordBody.classList.add('quarter-space'),
+			this.row.appendChild(wordBody),
+			this.formatNote(
+				'quarter-space',
+				null,
+				wordBody,
+				[invisible],
+				' '
+			),
+			this.formatNote(
+				'quarter-space',
+				null,
+				wordBody,
+				[invisible],
+				' '
+			);
+	}
 
 	sameRow() {
 		this.keepRow = true;
@@ -278,6 +316,7 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
 					);
 
 					for (let k = 0; k < columnsToFill; k++) {
+						debugger;
 						let divSquareLine = squareWithLine();
 						tittle[0].appendChild(divSquareLine);
 					}
@@ -299,4 +338,57 @@ function squareWithLine() {
 		line.classList.add('line'),
 		div.appendChild(line);
 	return div;
+}
+
+function pages() {
+	let pagesList = document.getElementById('pages');
+	let pages = document.getElementsByClassName('page');
+	for (let i = pages.length; i > 0; i--) {
+		let li = document.createElement('li');
+		li.appendChild(
+			document.createTextNode(getNumberInMandarin(i))
+		);
+		pagesList.appendChild(li);
+		li.onclick = function() {
+			showPage(i);
+		};
+	}
+}
+
+function showPage(page: number): any {
+	let pages: any = document.getElementsByClassName('page');
+	if (page) {
+		for (let i = 0; i < pages.length; i++) {
+			if (pages[i].id === String(page)) {
+				pages[i].style.display = 'flex';
+			} else {
+				pages[i].style.display = 'none';
+			}
+		}
+	}
+}
+
+function getNumberInMandarin(number: number) {
+	switch (number) {
+		case 1:
+			return '一';
+		case 2:
+			return '二';
+		case 3:
+			return '三';
+		case 4:
+			return '四';
+		case 5:
+			return '五';
+		case 6:
+			return '六';
+		case 7:
+			return '七';
+		case 8:
+			return '八';
+		case 9:
+			return '九';
+		case 10:
+			return '十';
+	}
 }

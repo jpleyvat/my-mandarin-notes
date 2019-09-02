@@ -1,8 +1,9 @@
 var Section = /** @class */ (function () {
-    function Section(sectionName, spaces) {
-        this.sectionName = sectionName;
+    function Section(spaces) {
         this.spaces = spaces;
         this.keepRow = false;
+        this.sectionName =
+            document.scripts[document.scripts.length - 1].parentElement;
         // Global constants
         this.row = this.createDiv();
         this.row.classList.add('row');
@@ -24,11 +25,11 @@ var Section = /** @class */ (function () {
         // Element nestings
         div.appendChild(line),
             div2.appendChild(line2),
-            tittle.appendChild(document.createTextNode(sectionName.id.toUpperCase())),
+            tittle.appendChild(document.createTextNode(this.sectionName.id.toUpperCase())),
             divTittle.appendChild(div),
             divTittle.appendChild(tittle),
             divTittle.appendChild(div2),
-            sectionName.appendChild(divTittle);
+            this.sectionName.appendChild(divTittle);
     }
     Section.prototype.charNote = function (noteData, classes) {
         this.setRow();
@@ -109,6 +110,16 @@ var Section = /** @class */ (function () {
                         space: true
                     });
                 break;
+            case 'quarter-space':
+                noteBody.classList.add('word-character-note'),
+                    wordBody.appendChild(noteBody),
+                    (appendlist = {
+                        character: false,
+                        meaning: false,
+                        pronunciation: false,
+                        space: true
+                    });
+                break;
         }
         if (appendlist.character)
             this.appendElement(noteBody, characterTag, 'character');
@@ -163,6 +174,20 @@ var Section = /** @class */ (function () {
             this.row.appendChild(wordBody),
             this.formatNote('word-meaning', null, wordBody, [invisible], ' ');
     };
+    Section.prototype.insertQuarterSpace = function (IndentSpace) {
+        this.setRow();
+        var invisible;
+        if (IndentSpace)
+            invisible = 'indent-space';
+        else
+            invisible = invisible = null;
+        var wordBody = this.createDiv();
+        this.row.appendChild(wordBody);
+        wordBody.classList.add('quarter-space'),
+            this.row.appendChild(wordBody),
+            this.formatNote('quarter-space', null, wordBody, [invisible], ' '),
+            this.formatNote('quarter-space', null, wordBody, [invisible], ' ');
+    };
     Section.prototype.sameRow = function () {
         this.keepRow = true;
     };
@@ -202,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
                         sections[i].offsetWidth) /
                         charWidth);
                     for (var k = 0; k < columnsToFill; k++) {
+                        debugger;
                         var divSquareLine = squareWithLine();
                         tittle[0].appendChild(divSquareLine);
                     }
@@ -222,4 +248,56 @@ function squareWithLine() {
         line.classList.add('line'),
         div.appendChild(line);
     return div;
+}
+function pages() {
+    var pagesList = document.getElementById('pages');
+    var pages = document.getElementsByClassName('page');
+    var _loop_1 = function (i) {
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode(getNumberInMandarin(i)));
+        pagesList.appendChild(li);
+        li.onclick = function () {
+            showPage(i);
+        };
+    };
+    for (var i = pages.length; i > 0; i--) {
+        _loop_1(i);
+    }
+}
+function showPage(page) {
+    var pages = document.getElementsByClassName('page');
+    if (page) {
+        for (var i = 0; i < pages.length; i++) {
+            if (pages[i].id === String(page)) {
+                pages[i].style.display = 'flex';
+            }
+            else {
+                pages[i].style.display = 'none';
+            }
+        }
+    }
+}
+function getNumberInMandarin(number) {
+    switch (number) {
+        case 1:
+            return '一';
+        case 2:
+            return '二';
+        case 3:
+            return '三';
+        case 4:
+            return '四';
+        case 5:
+            return '五';
+        case 6:
+            return '六';
+        case 7:
+            return '七';
+        case 8:
+            return '八';
+        case 9:
+            return '九';
+        case 10:
+            return '十';
+    }
 }

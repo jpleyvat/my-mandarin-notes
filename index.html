@@ -12,12 +12,12 @@
 	</head>
 	<body>
 		<script src="scripts.js"></script>
-		<div id="page1" class="page">
+		<div id="1" class="page">
 			<div class="column">
 				<!-- PRONOUNS -->
-				<div id="pronouns" class="section">
+				<div id="pronouns" class="section" title="pronouns">
 					<script>
-						let pro = new Section(pronouns);
+						let pro = new Section();
 						pro.charNote({
 							character: '我',
 							meaning: 'I, me',
@@ -67,7 +67,7 @@
 				<!-- WORDS -->
 				<div id="words" class="section">
 					<script>
-						let wo = new Section(words);
+						let wo = new Section();
 						wo.charNote({
 							character: '好',
 							meaning: 'Good',
@@ -200,7 +200,7 @@
 				<!-- QUESTIONS -->
 				<div id="questions" class="section">
 					<script>
-						let que = new Section(questions, 1);
+						let que = new Section(1);
 						que.indent();
 						que.charNote({
 							character: '呢',
@@ -265,16 +265,42 @@
 							],
 							'How'
 						);
-						que.insertSpace();
-						que.insertSpace();
-						que.insertSpace();
+						que.sameRow();
+						que.wordNote(
+							[
+								{
+									character: '几',
+									pronunciation: 'Jǐ '
+								},
+								{
+									character: '点',
+									pronunciation: 'diǎn'
+								}
+							],
+							'when'
+						);
 					</script>
 				</div>
 				<!-- /QUESTIONS -->
+				<!-- PREPOSITION -->
+				<div id="prepositions" class="section">
+					<script>
+						let pre = new Section(2);
+						pre.indent();
+						pre.charNote({
+							character: '在',
+							pronunciation: 'Zài',
+							meaning: 'In, at'
+						});
+						pre.insertSpace();
+						pre.insertQuarterSpace();
+					</script>
+				</div>
+				<!-- /PREPOSITION -->
 				<!-- VERBS -->
 				<div id="verbs" class="section">
 					<script>
-						let ve = new Section(verbs, 6);
+						let ve = new Section(6);
 						ve.indent();
 						ve.charNote({
 							character: '问',
@@ -337,6 +363,16 @@
 			</div>
 			<div class="column"></div>
 		</div>
-		<div id="page2" class="page"></div>
+		<div id="2" class="page">
+			<div class="column">
+				<div id="words" class="section">
+					<script></script>
+				</div>
+			</div>
+		</div>
+		<ul id="pages"></ul>
+		<script>
+			pages();
+		</script>
 	</body>
 </html>

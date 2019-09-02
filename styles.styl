@@ -20,6 +20,33 @@ fontSize = 'calc(%s / 4)' % characterSize
 body
   font-size: characterSize
 
+ul
+  &#pages
+    align-items: center
+    background-color: white 
+    display: flex
+    height: 2rem
+    justify-content: flex-end
+    position: fixed
+    top: calc(100% - 2rem)
+    width: 100%
+    z-index: 5
+  & li
+    align-items: center
+    background-color: salmon 
+    border-radius: 50%;
+    color: white
+    cursor: pointer
+    display: inherit 
+    font-size: 1rem
+    font-weight: bold
+    height: 2rem
+    justify-content: center
+    list-style: none
+    margin: 0 1rem 0 1rem
+    width: 2rem
+    
+
 .page
   align-items: flex-start
   align-self: auto
@@ -53,6 +80,12 @@ body
   flex-wrap: wrap
   width: 'calc(%s * 2)' % characterSize
   z-index: 1
+  & .quarter-space
+    display: inherit
+    flex-direction: row
+    flex-wrap: nowrap
+    min-width: 'calc(%s)' % characterSize
+    height: characterSize
 
   & .word-note
     // border: lightblue 2px solid
