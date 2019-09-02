@@ -49,6 +49,7 @@ ul li {
   height: calc(1.3225806451612903225806451612903 * calc(98vw - 3vw * 2));
   margin: 3vw;
   padding: calc(calc(calc(98vw - 3vw * 2) * 2 / 31) / 4);
+  padding-right: 0;
   position: absolute;
   width: calc(98vw - 3vw * 2);
 }

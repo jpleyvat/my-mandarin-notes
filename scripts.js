@@ -223,11 +223,10 @@ document.addEventListener('DOMContentLoaded', function getWidths() {
                         sections[i].offsetWidth / 2,
                         sections[i].getElementsByClassName('tittle')
                     ], charWidth = _a[0], tittle = _a[1];
-                    var columnsToFill = Math.floor((children[j].offsetWidth -
+                    var columnsToFill = (children[j].offsetWidth -
                         sections[i].offsetWidth) /
-                        charWidth);
+                        charWidth;
                     for (var k = 0; k < columnsToFill; k++) {
-                        debugger;
                         var divSquareLine = squareWithLine();
                         tittle[0].appendChild(divSquareLine);
                     }
@@ -301,3 +300,19 @@ function getNumberInMandarin(number) {
             return '十';
     }
 }
+function prueba() {
+    var request = new Request(
+    // 'https://www.googleapis.com/language/translate/v2/?target=es&q=%E6%88%91&key=AIzaSyBmSLZ2bu7xgdwzz7lEVDwHikyaLXQJYNA'
+    // 'https://cors-anywhere.herokuapp.com/https://glosbe.com/transliteration/api?from=Han&dest=Latin&text=%E6%88%91&format=json'
+    'https://glosbe.com/transliteration/api?from=Han&dest=Latin&text=%E6%88%91&format=json');
+    fetch(request)
+        .then(function (response) {
+        return response.text();
+    })
+        .then(function (text) {
+        console.log(JSON.parse(text));
+    })["catch"](function (error) {
+        console.log(error);
+    });
+}
+prueba();
