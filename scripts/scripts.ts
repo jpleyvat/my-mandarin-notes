@@ -5,6 +5,7 @@ interface MandarinNote {
 }
 
 class Section {
+	content: any[][];
 	sectionName: HTMLElement;
 	keepRow: boolean = false;
 	row: any;
@@ -14,107 +15,116 @@ class Section {
 				document.scripts.length - 1
 			].parentElement;
 		// Global constants
+		this.content = content;
 		this.row = this.createDiv();
 		this.row.classList.add('row');
 		this.indent();
 
-		// Elements asignment
-		let [divTittle, div, div2, line, line2, tittle] = [
-			this.createDiv(),
-			this.createDiv(),
-			this.createDiv(),
-			this.createDiv(),
-			this.createDiv(),
+		// Title
+		let [divTitle, title] = [
+			this.createDiv(['title']),
 			document.createElement('h1')
 		];
-
-		// Class asignments
-		divTittle.classList.add('tittle'),
-			div.classList.add('square'),
-			div2.classList.add('square'),
-			line.classList.add('line'),
-			line2.classList.add('line');
-
-		// Element nestings
-		// div.appendChild(line),
-		// 	div2.appendChild(line2),
-		tittle.appendChild(
-			document.createTextNode(this.sectionName.id.toUpperCase())
+		title.appendChild(
+			document.createTextNode(
+				this.sectionName.title.toUpperCase()
+			)
 		),
-			// divTittle.appendChild(div),
-			divTittle.appendChild(tittle),
-			// divTittle.appendChild(div2),
-			this.sectionName.appendChild(divTittle);
+			divTitle.appendChild(title),
+			this.sectionName.appendChild(divTitle);
+		this.showContent();
+		this.adjustSection();
+	}
 
-		if (content) {
-			for (let i = 0; i < content.length; i++) {
-				if (content[i][1] === 'same') this.sameRow();
-				this.setRow();
-				if (content[i][0] === 'character') {
-					let note = this.createDiv(['character-note']);
-					this.row.appendChild(note);
-					for (let j = 2; j < content[i].length; j++) {
-						note.appendChild(this.note(content[i][j], j));
-					}
-					let space = this.createDiv(
-						['square', 'space'],
-						true
-					);
-					note.append(space);
-				} else if (content[i][0] === 'word') {
-					let note = this.createDiv(['word-note']);
-					this.row.appendChild(note);
-					let pronunciation = content[i][3];
-					for (let j = 2; j < content[i].length - 2; j++) {
-						if (j != 3) {
-							for (
-								let k = 0;
-								k < content[i][j].length;
-								k++
-							) {
-								let wordCharacter = this.createDiv([
-									'word-character-note'
-								]);
+	showContent() {
+		for (let i = 0; i < this.content.length; i++) {
+			let element = this.content[i];
+			if (element[1] === 'same') this.sameRow();
+			this.setRow();
+			if (element[0] === 'character') {
+				let note = this.createDiv(['character-note']);
+				this.row.appendChild(note);
+				for (let j = 2; j < element.length; j++) {
+					note.appendChild(this.note(element[j], j));
+				}
+				note.append(this.insertSpace());
+			} else if (element[0] === 'word') {
+				let [note, meaning, meaningTag] = [
+					this.createDiv(['word-note']),
+					element[3],
+					this.createDiv(['word-character-note'])
+				];
+				this.row.appendChild(note);
+				for (let j = 2; j < element.length - 2; j++) {
+					if (j != 3) {
+						for (let k = 0; k < element[j].length; k++) {
+							let wordCharacter = this.createDiv([
+								'word-character-note'
+							]);
+							wordCharacter.appendChild(
+								this.note(element[j][k], j)
+							),
 								wordCharacter.appendChild(
-									this.note(content[i][j][k], j)
-								);
-								wordCharacter.appendChild(
-									this.note(content[i][j + 2][k], j)
-								);
+									this.note(element[j + 2][k], 4)
+								),
 								note.appendChild(wordCharacter);
-							}
 						}
 					}
 				}
+				meaningTag.appendChild(this.note(meaning, 3));
+				meaningTag.appendChild(this.insertSpace());
+				note.appendChild(meaningTag);
 			}
 		}
-
-		this.adjustSection();
-		this.changeDirection();
 	}
 
 	adjustSection() {
 		let children: any = this.sectionName.childNodes;
 		let maxWidth: any = this.sectionName.offsetWidth;
-		let [charWidth, tittle] = [
+		// let rows: any = this.sectionName.getElementsByClassName('row')
+		let [charWidth, title] = [
 			this.sectionName.offsetWidth / 2,
-			this.sectionName.getElementsByClassName('tittle')
+			this.sectionName.getElementsByClassName('title')
 		];
-		for (let i = 0; i < children.length; i++) {
-			if (children[i].offsetWidth) {
-				if (children[i].offsetWidth > maxWidth) {
-					maxWidth = children[i].offsetWidth;
+		(function loopChild(adjustment: boolean, self) {
+			for (let i = 0; i < children.length; i++) {
+				let missingSpaces =
+					(maxWidth - children[i].offsetWidth) / charWidth;
+				if (adjustment) {
+					for (let k = 0; k < missingSpaces; k++) {
+						if (
+							!children[i].classList.contains('title')
+						) {
+							children[i].appendChild(
+								self.insertTwoSpaces()
+							);
+						}
+					}
+				} else if (children[i].offsetWidth) {
+					if (children[i].classList) {
+						if (
+							children[i].classList.contains('row') &&
+							children[i].offsetWidth > maxWidth
+						) {
+							maxWidth = children[i].offsetWidth;
+						}
+					}
+					if (i + 1 >= children.length) {
+						loopChild(true, self);
+					}
 				}
 			}
-		}
+		})(false, this);
 
 		let columnsToFill = Math.ceil(maxWidth / charWidth);
-
 		this.sectionName.style.width =
 			(maxWidth + 1).toString() + 'px';
 		for (let k = 0; k < columnsToFill; k++) {
 			let space = this.createDiv(['square', 'space'], true);
-			tittle[0].appendChild(space);
+			if (!(k + 1 < columnsToFill)) {
+				space.style.borderRight = 'none';
+			}
+			title[0].appendChild(space);
 		}
 	}
 
@@ -170,10 +180,6 @@ class Section {
 		this.keepRow = true;
 	}
 
-	changeDirection() {
-		this.sectionName.style.flexDirection = 'row';
-	}
-
 	createDiv(classes?: string[], withLine?: boolean) {
 		let div = document.createElement('div');
 		if (withLine) {
@@ -187,6 +193,18 @@ class Section {
 			}
 
 		return div;
+	}
+
+	insertSpace() {
+		let space = this.createDiv(['square', 'space'], true);
+		return space;
+	}
+
+	insertTwoSpaces() {
+		let twoSpaces = this.createDiv(['word-character-note'], true);
+		twoSpaces.appendChild(this.insertSpace());
+		twoSpaces.appendChild(this.insertSpace());
+		return twoSpaces;
 	}
 
 	indent() {
@@ -206,207 +224,6 @@ class Section {
 					String(marginNumber) + 'px');
 		}
 	}
-
-	charNote(noteData: MandarinNote, classes?: string[]) {
-		this.setRow();
-		if (classes) this.formatNote('character', noteData, classes);
-		else this.formatNote('character', noteData);
-	}
-
-	wordNote(
-		noteData: MandarinNote[],
-		wordMeaning: string,
-		classes?: string[]
-	) {
-		this.setRow();
-		let wordBody = this.createDiv();
-		wordBody.classList.add('word-note'),
-			this.row.appendChild(wordBody);
-		for (let i = 0; i < noteData.length; i++) {
-			if (classes)
-				this.formatNote(
-					'word',
-					noteData[i],
-					wordBody,
-					classes
-				);
-			else this.formatNote('word', noteData[i], wordBody);
-		}
-		this.formatNote(
-			'word-meaning',
-			null,
-			wordBody,
-			null,
-			wordMeaning
-		);
-	}
-
-	formatNote(
-		type: string,
-		noteData?: MandarinNote,
-		wordBody?: any,
-		classes?: string[],
-		wordMeaning?: string
-	) {
-		let [
-			noteBody,
-			characterTag,
-			pronunciationTag,
-			meaningTag,
-			appendlist
-		] = [
-			this.createDiv(),
-			document.createElement('p'),
-			document.createElement('p'),
-			document.createElement('p'),
-			{
-				character: false,
-				meaning: false,
-				pronunciation: false,
-				space: false
-			}
-		];
-		if (classes) {
-			for (let i = 0; i < classes.length; i++) {
-				noteBody.classList.add(classes[i]);
-			}
-		}
-		this.row.appendChild(noteBody);
-
-		if (noteData) {
-			characterTag.appendChild(
-				document.createTextNode(noteData.character)
-			),
-				pronunciationTag.appendChild(
-					document.createTextNode(noteData.pronunciation)
-				);
-			if (noteData.meaning)
-				meaningTag.appendChild(
-					document.createTextNode(noteData.meaning)
-				);
-		}
-		if (wordMeaning)
-			meaningTag.appendChild(
-				document.createTextNode(wordMeaning)
-			);
-
-		switch (type) {
-			case 'character':
-				noteBody.classList.add('character-note'),
-					(appendlist = {
-						character: true,
-						meaning: true,
-						pronunciation: true,
-						space: true
-					});
-				if (wordBody) wordBody.appendChild(noteBody);
-				break;
-
-			case 'word':
-				noteBody.classList.add('word-character-note'),
-					wordBody.appendChild(noteBody),
-					(appendlist = {
-						character: true,
-						meaning: false,
-						pronunciation: true,
-						space: false
-					});
-				break;
-
-			case 'word-meaning':
-				noteBody.classList.add('word-character-note'),
-					wordBody.appendChild(noteBody),
-					(appendlist = {
-						character: false,
-						meaning: true,
-						pronunciation: false,
-						space: true
-					});
-				break;
-			case 'quarter-space':
-				noteBody.classList.add('word-character-note'),
-					wordBody.appendChild(noteBody),
-					(appendlist = {
-						character: false,
-						meaning: false,
-						pronunciation: false,
-						space: true
-					});
-				break;
-		}
-
-		if (appendlist.character)
-			this.appendElement(noteBody, characterTag, 'character');
-		if (appendlist.meaning)
-			this.appendElement(noteBody, meaningTag, 'meaning');
-		if (appendlist.pronunciation)
-			this.appendElement(
-				noteBody,
-				pronunciationTag,
-				'pronunciation'
-			);
-		if (appendlist.space)
-			this.appendElement(noteBody, null, 'space');
-	}
-
-	insertSpace() {
-		this.charNote({
-			character: '',
-			meaning: '',
-			pronunciation: ''
-		});
-	}
-
-	insertHalfSpace(IndentSpace?: boolean) {
-		let invisible;
-		if (IndentSpace) invisible = 'indent-space';
-		else invisible = invisible = null;
-		let wordBody = this.createDiv();
-		wordBody.classList.add('word-note'),
-			this.row.appendChild(wordBody),
-			this.formatNote(
-				'word-meaning',
-				null,
-				wordBody,
-				[invisible],
-				' '
-			);
-	}
-	insertQuarterSpace(IndentSpace?: boolean) {
-		this.setRow();
-		let invisible: string;
-		if (IndentSpace) invisible = 'indent-space';
-		else invisible = invisible = null;
-		let wordBody = this.createDiv();
-		this.row.appendChild(wordBody);
-		wordBody.classList.add('quarter-space'),
-			this.row.appendChild(wordBody),
-			this.formatNote(
-				'quarter-space',
-				null,
-				wordBody,
-				[invisible],
-				' '
-			),
-			this.formatNote(
-				'quarter-space',
-				null,
-				wordBody,
-				[invisible],
-				' '
-			);
-	}
-}
-
-function squareWithLine() {
-	let [div, line] = [
-		document.createElement('div'),
-		document.createElement('div')
-	];
-	div.classList.add('square'),
-		line.classList.add('line'),
-		div.appendChild(line);
-	return div;
 }
 
 function pages() {

@@ -66,7 +66,7 @@ ul li {
   flex-wrap: nowrap;
   max-height: calc(98vw - 3vw * 2);
 }
-.tittle {
+.title {
   align-items: center;
   border: none;
   border-top: #fa8072 3px solid;
@@ -78,14 +78,14 @@ ul li {
   position: relative;
   z-index: 1;
 }
-.tittle:before {
+.title:before {
   border-top: none;
   width: 100%;
 }
-.tittle .square {
+.title .square {
   z-index: -1;
 }
-.tittle h1 {
+.title h1 {
   font-size: 1.25rem;
   margin-right: 2rem;
   position: absolute;
