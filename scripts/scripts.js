@@ -1,5 +1,5 @@
 var Section = /** @class */ (function () {
-    function Section(spaces) {
+    function Section(spaces, content) {
         this.spaces = spaces;
         this.keepRow = false;
         this.sectionName =
@@ -7,6 +7,7 @@ var Section = /** @class */ (function () {
         // Global constants
         this.row = this.createDiv();
         this.row.classList.add('row');
+        this.indent();
         // Elements asignment
         var _a = [
             this.createDiv(),
@@ -17,20 +18,154 @@ var Section = /** @class */ (function () {
             document.createElement('h1')
         ], divTittle = _a[0], div = _a[1], div2 = _a[2], line = _a[3], line2 = _a[4], tittle = _a[5];
         // Class asignments
-        divTittle.classList.add('square', 'tittle'),
+        divTittle.classList.add('tittle'),
             div.classList.add('square'),
             div2.classList.add('square'),
             line.classList.add('line'),
             line2.classList.add('line');
         // Element nestings
-        div.appendChild(line),
-            div2.appendChild(line2),
-            tittle.appendChild(document.createTextNode(this.sectionName.id.toUpperCase())),
-            divTittle.appendChild(div),
+        // div.appendChild(line),
+        // 	div2.appendChild(line2),
+        tittle.appendChild(document.createTextNode(this.sectionName.id.toUpperCase())),
+            // divTittle.appendChild(div),
             divTittle.appendChild(tittle),
-            divTittle.appendChild(div2),
+            // divTittle.appendChild(div2),
             this.sectionName.appendChild(divTittle);
+        if (content) {
+            for (var i = 0; i < content.length; i++) {
+                if (content[i][1] === 'same')
+                    this.sameRow();
+                this.setRow();
+                if (content[i][0] === 'character') {
+                    var note = this.createDiv(['character-note']);
+                    this.row.appendChild(note);
+                    for (var j = 2; j < content[i].length; j++) {
+                        note.appendChild(this.note(content[i][j], j));
+                    }
+                    var space = this.createDiv(['square', 'space'], true);
+                    note.append(space);
+                }
+                else if (content[i][0] === 'word') {
+                    var note = this.createDiv(['word-note']);
+                    this.row.appendChild(note);
+                    var pronunciation = content[i][3];
+                    for (var j = 2; j < content[i].length - 2; j++) {
+                        if (j != 3) {
+                            for (var k = 0; k < content[i][j].length; k++) {
+                                var wordCharacter = this.createDiv([
+                                    'word-character-note'
+                                ]);
+                                wordCharacter.appendChild(this.note(content[i][j][k], j));
+                                wordCharacter.appendChild(this.note(content[i][j + 2][k], j));
+                                note.appendChild(wordCharacter);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        this.adjustSection();
+        this.changeDirection();
     }
+    Section.prototype.adjustSection = function () {
+        var children = this.sectionName.childNodes;
+        var maxWidth = this.sectionName.offsetWidth;
+        var _a = [
+            this.sectionName.offsetWidth / 2,
+            this.sectionName.getElementsByClassName('tittle')
+        ], charWidth = _a[0], tittle = _a[1];
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].offsetWidth) {
+                if (children[i].offsetWidth > maxWidth) {
+                    maxWidth = children[i].offsetWidth;
+                }
+            }
+        }
+        var columnsToFill = Math.ceil(maxWidth / charWidth);
+        this.sectionName.style.width =
+            (maxWidth + 1).toString() + 'px';
+        for (var k = 0; k < columnsToFill; k++) {
+            var space = this.createDiv(['square', 'space'], true);
+            tittle[0].appendChild(space);
+        }
+    };
+    Section.prototype.note = function (content, typeNumber) {
+        var type;
+        switch (typeNumber) {
+            case 2:
+                type = 'character';
+                break;
+            case 3:
+                type = 'meaning';
+                break;
+            case 4:
+                type = 'pronunciation';
+                break;
+        }
+        var element = this.createDiv(['square', type], true);
+        var innerTag = document.createElement('p');
+        innerTag.appendChild(document.createTextNode(content));
+        element.appendChild(innerTag);
+        return element;
+    };
+    Section.prototype.appendElement = function (parent, elementToAdd, classToAdd) {
+        var _a = [
+            document.createElement('div'),
+            document.createElement('div')
+        ], div = _a[0], line = _a[1];
+        div.classList.add('square'),
+            line.classList.add('line'),
+            div.appendChild(line);
+        if (elementToAdd)
+            div.appendChild(elementToAdd);
+        if (classToAdd)
+            div.classList.add(classToAdd);
+        parent.appendChild(div);
+    };
+    Section.prototype.setRow = function () {
+        if (this.keepRow) {
+            this.sectionName.appendChild(this.row),
+                (this.keepRow = false);
+        }
+        else {
+            var newRow = this.createDiv();
+            newRow.classList.add('row'),
+                (this.row = newRow),
+                this.sectionName.appendChild(this.row);
+        }
+    };
+    Section.prototype.sameRow = function () {
+        this.keepRow = true;
+    };
+    Section.prototype.changeDirection = function () {
+        this.sectionName.style.flexDirection = 'row';
+    };
+    Section.prototype.createDiv = function (classes, withLine) {
+        var div = document.createElement('div');
+        if (withLine) {
+            var line = document.createElement('div');
+            line.classList.add('line');
+            div.appendChild(line);
+        }
+        if (classes)
+            for (var i = 0; i < classes.length; i++) {
+                div.classList.add(classes[i]);
+            }
+        return div;
+    };
+    Section.prototype.indent = function () {
+        var charWidth = Number(window
+            .getComputedStyle(document.body)
+            .getPropertyValue('font-size')
+            .match(/\d+/)[0]);
+        for (var i = 0; i < this.spaces; i++) {
+            var margin = this.sectionName.style.marginLeft;
+            var marginNumber = Number(margin.replace('px', ''));
+            (marginNumber += charWidth),
+                (this.sectionName.style.marginLeft =
+                    String(marginNumber) + 'px');
+        }
+    };
     Section.prototype.charNote = function (noteData, classes) {
         this.setRow();
         if (classes)
@@ -130,32 +265,6 @@ var Section = /** @class */ (function () {
         if (appendlist.space)
             this.appendElement(noteBody, null, 'space');
     };
-    Section.prototype.appendElement = function (parent, elementToAdd, classToAdd) {
-        var _a = [
-            document.createElement('div'),
-            document.createElement('div')
-        ], div = _a[0], line = _a[1];
-        div.classList.add('square'),
-            line.classList.add('line'),
-            div.appendChild(line);
-        if (elementToAdd)
-            div.appendChild(elementToAdd);
-        if (classToAdd)
-            div.classList.add(classToAdd);
-        parent.appendChild(div);
-    };
-    Section.prototype.setRow = function () {
-        if (this.keepRow) {
-            this.sectionName.appendChild(this.row),
-                (this.keepRow = false);
-        }
-        else {
-            var newRow = this.createDiv();
-            newRow.classList.add('row'),
-                (this.row = newRow),
-                this.sectionName.appendChild(this.row);
-        }
-    };
     Section.prototype.insertSpace = function () {
         this.charNote({
             character: '',
@@ -188,56 +297,8 @@ var Section = /** @class */ (function () {
             this.formatNote('quarter-space', null, wordBody, [invisible], ' '),
             this.formatNote('quarter-space', null, wordBody, [invisible], ' ');
     };
-    Section.prototype.sameRow = function () {
-        this.keepRow = true;
-    };
-    Section.prototype.changeDirection = function () {
-        this.sectionName.style.flexDirection = 'row';
-    };
-    Section.prototype.createDiv = function () {
-        return document.createElement('div');
-    };
-    Section.prototype.indent = function () {
-        var charWidth = Number(window
-            .getComputedStyle(document.body)
-            .getPropertyValue('font-size')
-            .match(/\d+/)[0]);
-        for (var i = 0; i < this.spaces; i++) {
-            var margin = this.sectionName.style.marginLeft;
-            var marginNumber = Number(margin.replace('px', ''));
-            (marginNumber += charWidth),
-                (this.sectionName.style.marginLeft =
-                    String(marginNumber) + 'px');
-        }
-    };
     return Section;
 }());
-document.addEventListener('DOMContentLoaded', function getWidths() {
-    var sections = document.getElementsByClassName('section');
-    for (var i = 0; i < sections.length; i++) {
-        var children = sections[i].childNodes;
-        for (var j = 0; j < children.length; j++) {
-            if (children[j].offsetWidth) {
-                if (children[j].offsetWidth > sections[i].offsetWidth) {
-                    var _a = [
-                        sections[i].offsetWidth / 2,
-                        sections[i].getElementsByClassName('tittle')
-                    ], charWidth = _a[0], tittle = _a[1];
-                    var columnsToFill = Math.floor((children[j].offsetWidth -
-                        sections[i].offsetWidth) /
-                        charWidth);
-                    for (var k = 0; k < columnsToFill; k++) {
-                        var divSquareLine = squareWithLine();
-                        tittle[0].appendChild(divSquareLine);
-                    }
-                    sections[i].style.width =
-                        (children[j].offsetWidth + 1).toString() +
-                            'px';
-                }
-            }
-        }
-    }
-});
 function squareWithLine() {
     var _a = [
         document.createElement('div'),
@@ -300,21 +361,3 @@ function getNumberInMandarin(number) {
             return '十';
     }
 }
-// function prueba() {
-// 	let request = new Request(
-// 		// 'https://www.googleapis.com/language/translate/v2/?target=es&q=%E6%88%91&key=AIzaSyBmSLZ2bu7xgdwzz7lEVDwHikyaLXQJYNA'
-// 		// 'https://cors-anywhere.herokuapp.com/https://glosbe.com/transliteration/api?from=Han&dest=Latin&text=%E6%88%91&format=json'
-// 		'https://glosbe.com/transliteration/api?from=Han&dest=Latin&text=%E6%88%91&format=json'
-// 	);
-// 	fetch(request)
-// 		.then(response => {
-// 			return response.text();
-// 		})
-// 		.then(text => {
-// 			console.log(JSON.parse(text));
-// 		})
-// 		.catch(error => {
-// 			console.log(error);
-// 		});
-// }
-// prueba();

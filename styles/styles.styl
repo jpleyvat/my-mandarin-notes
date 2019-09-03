@@ -73,11 +73,34 @@ ul
   flex-wrap: nowrap
   max-height: pageWidth
 
+.tittle
+  align-items: center
+  border: none 
+  border-top: salmon  3px solid
+  border-bottom: salmon  3px solid
+  display: inherit 
+  height: characterSize
+  justify-content: start
+  width: 100%
+  position: relative
+  z-index: 1
+  &:before
+    border-top: none 
+    width: 100%
+  & .square
+    z-index: -1
+  & h1
+    font-size: 1.25rem
+    margin-right: 2rem 
+    position: absolute
+    text-align: right
+    width: calc(100% - 2rem)
+    z-index: 2
+
 .section
-  // align-items: stretch
   border-right: lightblue 2px solid 
   display: inherit 
-  flex-direction: column 
+  flex-direction: row 
   flex-wrap: wrap
   width: 'calc(%s * 2)' % characterSize
   z-index: 1
@@ -127,29 +150,6 @@ ul
         bottom: 0
         width: characterSize
         z-index: -1    
-    &.tittle
-      align-items: center
-      border: none 
-      border-top: salmon  3px solid
-      border-bottom: salmon  3px solid
-      display: inherit 
-      height: characterSize
-      justify-content: start
-      width: 100%
-      position: relative
-      z-index: 1
-      &:before
-        border-top: none 
-        width: 100%
-      & .square
-        z-index: -1
-      & h1
-        font-size: 1.25rem
-        margin-right: 2rem 
-        position: absolute
-        text-align: right
-        width: calc(100% - 2rem)
-        z-index: 2
 
     &.character
       align-items: center

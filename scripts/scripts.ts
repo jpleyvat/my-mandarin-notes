@@ -8,7 +8,7 @@ class Section {
 	sectionName: HTMLElement;
 	keepRow: boolean = false;
 	row: any;
-	constructor(private spaces?: number) {
+	constructor(private spaces?: number, content?: any[][]) {
 		this.sectionName =
 			document.scripts[
 				document.scripts.length - 1
@@ -16,6 +16,7 @@ class Section {
 		// Global constants
 		this.row = this.createDiv();
 		this.row.classList.add('row');
+		this.indent();
 
 		// Elements asignment
 		let [divTittle, div, div2, line, line2, tittle] = [
@@ -28,24 +29,182 @@ class Section {
 		];
 
 		// Class asignments
-		divTittle.classList.add('square', 'tittle'),
+		divTittle.classList.add('tittle'),
 			div.classList.add('square'),
 			div2.classList.add('square'),
 			line.classList.add('line'),
 			line2.classList.add('line');
 
 		// Element nestings
-		div.appendChild(line),
-			div2.appendChild(line2),
-			tittle.appendChild(
-				document.createTextNode(
-					this.sectionName.id.toUpperCase()
-				)
-			),
-			divTittle.appendChild(div),
+		// div.appendChild(line),
+		// 	div2.appendChild(line2),
+		tittle.appendChild(
+			document.createTextNode(this.sectionName.id.toUpperCase())
+		),
+			// divTittle.appendChild(div),
 			divTittle.appendChild(tittle),
-			divTittle.appendChild(div2),
+			// divTittle.appendChild(div2),
 			this.sectionName.appendChild(divTittle);
+
+		if (content) {
+			for (let i = 0; i < content.length; i++) {
+				if (content[i][1] === 'same') this.sameRow();
+				this.setRow();
+				if (content[i][0] === 'character') {
+					let note = this.createDiv(['character-note']);
+					this.row.appendChild(note);
+					for (let j = 2; j < content[i].length; j++) {
+						note.appendChild(this.note(content[i][j], j));
+					}
+					let space = this.createDiv(
+						['square', 'space'],
+						true
+					);
+					note.append(space);
+				} else if (content[i][0] === 'word') {
+					let note = this.createDiv(['word-note']);
+					this.row.appendChild(note);
+					let pronunciation = content[i][3];
+					for (let j = 2; j < content[i].length - 2; j++) {
+						if (j != 3) {
+							for (
+								let k = 0;
+								k < content[i][j].length;
+								k++
+							) {
+								let wordCharacter = this.createDiv([
+									'word-character-note'
+								]);
+								wordCharacter.appendChild(
+									this.note(content[i][j][k], j)
+								);
+								wordCharacter.appendChild(
+									this.note(content[i][j + 2][k], j)
+								);
+								note.appendChild(wordCharacter);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		this.adjustSection();
+		this.changeDirection();
+	}
+
+	adjustSection() {
+		let children: any = this.sectionName.childNodes;
+		let maxWidth: any = this.sectionName.offsetWidth;
+		let [charWidth, tittle] = [
+			this.sectionName.offsetWidth / 2,
+			this.sectionName.getElementsByClassName('tittle')
+		];
+		for (let i = 0; i < children.length; i++) {
+			if (children[i].offsetWidth) {
+				if (children[i].offsetWidth > maxWidth) {
+					maxWidth = children[i].offsetWidth;
+				}
+			}
+		}
+
+		let columnsToFill = Math.ceil(maxWidth / charWidth);
+
+		this.sectionName.style.width =
+			(maxWidth + 1).toString() + 'px';
+		for (let k = 0; k < columnsToFill; k++) {
+			let space = this.createDiv(['square', 'space'], true);
+			tittle[0].appendChild(space);
+		}
+	}
+
+	note(content, typeNumber): HTMLElement {
+		let type: string;
+		switch (typeNumber) {
+			case 2:
+				type = 'character';
+				break;
+			case 3:
+				type = 'meaning';
+				break;
+			case 4:
+				type = 'pronunciation';
+				break;
+		}
+		let element = this.createDiv(['square', type], true);
+		let innerTag = document.createElement('p');
+		innerTag.appendChild(document.createTextNode(content));
+		element.appendChild(innerTag);
+
+		return element;
+	}
+
+	appendElement(parent: any, elementToAdd: any, classToAdd: any) {
+		let [div, line] = [
+			document.createElement('div'),
+			document.createElement('div')
+		];
+		div.classList.add('square'),
+			line.classList.add('line'),
+			div.appendChild(line);
+		if (elementToAdd) div.appendChild(elementToAdd);
+
+		if (classToAdd) div.classList.add(classToAdd);
+
+		parent.appendChild(div);
+	}
+
+	setRow() {
+		if (this.keepRow) {
+			this.sectionName.appendChild(this.row),
+				(this.keepRow = false);
+		} else {
+			let newRow = this.createDiv();
+			newRow.classList.add('row'),
+				(this.row = newRow),
+				this.sectionName.appendChild(this.row);
+		}
+	}
+
+	sameRow() {
+		this.keepRow = true;
+	}
+
+	changeDirection() {
+		this.sectionName.style.flexDirection = 'row';
+	}
+
+	createDiv(classes?: string[], withLine?: boolean) {
+		let div = document.createElement('div');
+		if (withLine) {
+			let line = document.createElement('div');
+			line.classList.add('line');
+			div.appendChild(line);
+		}
+		if (classes)
+			for (let i = 0; i < classes.length; i++) {
+				div.classList.add(classes[i]);
+			}
+
+		return div;
+	}
+
+	indent() {
+		let charWidth = Number(
+			window
+				.getComputedStyle(document.body)
+				.getPropertyValue('font-size')
+				.match(/\d+/)[0]
+		);
+		for (let i = 0; i < this.spaces; i++) {
+			let margin: string = this.sectionName.style.marginLeft;
+			let marginNumber: number = Number(
+				margin.replace('px', '')
+			);
+			(marginNumber += charWidth),
+				(this.sectionName.style.marginLeft =
+					String(marginNumber) + 'px');
+		}
 	}
 
 	charNote(noteData: MandarinNote, classes?: string[]) {
@@ -190,33 +349,6 @@ class Section {
 			this.appendElement(noteBody, null, 'space');
 	}
 
-	appendElement(parent: any, elementToAdd: any, classToAdd: any) {
-		let [div, line] = [
-			document.createElement('div'),
-			document.createElement('div')
-		];
-		div.classList.add('square'),
-			line.classList.add('line'),
-			div.appendChild(line);
-		if (elementToAdd) div.appendChild(elementToAdd);
-
-		if (classToAdd) div.classList.add(classToAdd);
-
-		parent.appendChild(div);
-	}
-
-	setRow() {
-		if (this.keepRow) {
-			this.sectionName.appendChild(this.row),
-				(this.keepRow = false);
-		} else {
-			let newRow = this.createDiv();
-			newRow.classList.add('row'),
-				(this.row = newRow),
-				this.sectionName.appendChild(this.row);
-		}
-	}
-
 	insertSpace() {
 		this.charNote({
 			character: '',
@@ -264,69 +396,7 @@ class Section {
 				' '
 			);
 	}
-
-	sameRow() {
-		this.keepRow = true;
-	}
-
-	changeDirection() {
-		this.sectionName.style.flexDirection = 'row';
-	}
-
-	createDiv() {
-		return document.createElement('div');
-	}
-
-	indent() {
-		let charWidth = Number(
-			window
-				.getComputedStyle(document.body)
-				.getPropertyValue('font-size')
-				.match(/\d+/)[0]
-		);
-		for (let i = 0; i < this.spaces; i++) {
-			let margin: string = this.sectionName.style.marginLeft;
-			let marginNumber: number = Number(
-				margin.replace('px', '')
-			);
-			(marginNumber += charWidth),
-				(this.sectionName.style.marginLeft =
-					String(marginNumber) + 'px');
-		}
-	}
 }
-
-document.addEventListener('DOMContentLoaded', function getWidths() {
-	let sections: any = document.getElementsByClassName('section');
-	for (let i = 0; i < sections.length; i++) {
-		let children: any = sections[i].childNodes;
-		for (let j = 0; j < children.length; j++) {
-			if (children[j].offsetWidth) {
-				if (
-					children[j].offsetWidth > sections[i].offsetWidth
-				) {
-					let [charWidth, tittle] = [
-						sections[i].offsetWidth / 2,
-						sections[i].getElementsByClassName('tittle')
-					];
-					let columnsToFill = Math.floor(
-						(children[j].offsetWidth -
-							sections[i].offsetWidth) /
-							charWidth
-					);
-
-					for (let k = 0; k < columnsToFill; k++) {
-						let divSquareLine = squareWithLine();
-						tittle[0].appendChild(divSquareLine);
-					}
-					sections[i].style.width =
-						(children[j].offsetWidth + 1).toString() +
-						'px';
-				}
-			}
-		}
-	}
-});
 
 function squareWithLine() {
 	let [div, line] = [
@@ -391,22 +461,3 @@ function getNumberInMandarin(number: number) {
 			return '十';
 	}
 }
-
-// function prueba() {
-// 	let request = new Request(
-// 		// 'https://www.googleapis.com/language/translate/v2/?target=es&q=%E6%88%91&key=AIzaSyBmSLZ2bu7xgdwzz7lEVDwHikyaLXQJYNA'
-// 		// 'https://cors-anywhere.herokuapp.com/https://glosbe.com/transliteration/api?from=Han&dest=Latin&text=%E6%88%91&format=json'
-// 		'https://glosbe.com/transliteration/api?from=Han&dest=Latin&text=%E6%88%91&format=json'
-// 	);
-// 	fetch(request)
-// 		.then(response => {
-// 			return response.text();
-// 		})
-// 		.then(text => {
-// 			console.log(JSON.parse(text));
-// 		})
-// 		.catch(error => {
-// 			console.log(error);
-// 		});
-// }
-// prueba();
