@@ -6,6 +6,7 @@ var Section = /** @class */ (function () {
             document.scripts[document.scripts.length - 1].parentElement;
         // Global constants
         this.content = content;
+        this.characterWidth = this.sectionName.offsetWidth / 2;
         this.row = this.createDiv();
         this.row.classList.add('row');
         this.indent();
@@ -70,6 +71,8 @@ var Section = /** @class */ (function () {
         (function loopChild(adjustment, self) {
             for (var i = 0; i < children.length; i++) {
                 var missingSpaces = (maxWidth - children[i].offsetWidth) / charWidth;
+                if (self.sectionName.title === 'question') {
+                }
                 if (adjustment) {
                     for (var k = 0; k < missingSpaces; k++) {
                         if (!children[i].classList.contains('title')) {
@@ -185,10 +188,18 @@ var Section = /** @class */ (function () {
                     String(marginNumber) + 'px');
         }
     };
+    Section.prototype.insertLine = function () {
+        this.setRow();
+        for (var i = 0; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
+            var space = this.insertSpace();
+            this.row.appendChild(space);
+        }
+    };
     return Section;
 }());
-function pages() {
-    var pagesList = document.getElementById('pages');
+document.addEventListener('DOMContentLoaded', function () {
+    var pagesList = document.createElement('ul');
+    pagesList.id = 'pages';
     var pages = document.getElementsByClassName('page');
     var _loop_1 = function (i) {
         var li = document.createElement('li');
@@ -201,7 +212,11 @@ function pages() {
     for (var i = pages.length; i > 0; i--) {
         _loop_1(i);
     }
-}
+    document.body.appendChild(pagesList);
+    showPage(1);
+}, false);
+// (function pages() {
+// })();
 function showPage(page) {
     var pages = document.getElementsByClassName('page');
     if (page) {

@@ -70,16 +70,28 @@
                 ['word', 'same', ['如', '何'], 'How', ['Rú','hé']],
                 ['character', 'new', ' ', ' ', ' '],
                 ['word', 'same', ['多', '么'], 'How', ['Duō','Me']],
-                ['word', 'same', ['几', '点'], 'How', ['Jǐ','diǎn']],
-                ['character', 'new', ' ', ' ', ' '],
-                ['character', 'new', ' ', ' ', ' '],
-                ['character', 'new', ' ', ' ', ' '],
+                ['word', 'same', ['几', '点'], 'How', ['Jǐ','diǎn']]
               ]
               let questions = new Section(2, notes);
+              questions.insertLine()
+              
             })()
           </script>
         </div>
         <!-- /QUESTIONS -->
+        <!-- /PREPOSITIONS -->
+        <div class="section" title="prepositions">
+          <script>
+            (function(){
+              let notes = [
+                ['character', 'new', ' ', ' ', ' '],
+                ['character', 'new', ' ', ' ', ' '],
+              ]
+              let prepositions = new Section(2, notes);
+            })()
+          </script>
+        </div>
+        <!-- /PREPOSITIONS -->
         <!-- VERBS -->
         <div class="section" title="verbs">
           <script>
@@ -98,13 +110,57 @@
             })()
           </script>
         </div>
-        <!-- /VERBS -->
-        
+        <!-- /VERBS --> 
       </div>
+    </div>
+    <div id="2" class="page">
+        <div class="column">
+            <!-- PRONOUNS -->
+            <div class="section" title="pronouns">
+              <script>
+                (function(){
+                  let notes = 
+                  [
+                    ['character', 'new', '我', 'I, me', 'Wǒ'],
+                    ['character', 'same', '们', 'Plural', 'Men'],
+                    ['character', 'new', '你', 'You', 'Nǐ'],
+                    ['character', 'same', '的', 'Pos', 'De'],
+                    ['character', 'new', '他', 'He, him', 'Tā'],
+                    ['space', 'same'],
+                    ['character', 'new', '她', 'She, her', 'Tā'],
+                    ['space', 'same'],
+                    ['character', 'new', '它', 'It, its', 'Tā'],
+                  ];
+                  let pronouns = new Section(0, notes);
+                })()
+                
+              </script>
+            </div>
+            <!-- /PRONOUNS -->
+            <!-- WORDS -->
+            <div  class="section" title="words">
+              <script>
+                (function(){
+                  let notes = [
+                    ['character', 'same', '也', 'Also', 'Yě'],
+                    ['character', 'same', '忙', 'Busy', 'Máng'],
+                    ['word', 'same', ['再', '见'], 'Goodbye', ['Zài', 'Jiàn']],
+                    ['character', 'new', '好', 'Good', 'Hǎo'],
+                    ['character', 'same', '谢', 'Thank', 'Xiè'],
+                    ['word', 'same', ['你', '好'], 'Hello', ['Nǐ', 'Hǎo']],
+                    ['character', 'new', '很', 'Very', 'Hěn'],
+                    ['word', 'same', ['对', '不', '起'], 'I am sorry', ['Duì', 'Bù', 'Qǐ']],
+                    ['word', 'new', ['没', '关', '系'], 'No worries', ['méi', 'guān', 'xì']],
+                    ['word', 'same', ['不', '客', '气'], 'You are welcome', ['Bù', 'Kè', 'Qì']],
+                  ];
+                  let words = new Section(0, notes);
+                }())
+              </script>
+            </div>
+            <!-- /WORDS -->
+        </div>
+    </div>
 			
-		<script>
-			// pages();
-		</script>
 	</body>
 </html>
 

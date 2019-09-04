@@ -9,6 +9,7 @@ class Section {
 	sectionName: HTMLElement;
 	keepRow: boolean = false;
 	row: any;
+	characterWidth;
 	constructor(private spaces?: number, content?: any[][]) {
 		this.sectionName =
 			document.scripts[
@@ -16,6 +17,7 @@ class Section {
 			].parentElement;
 		// Global constants
 		this.content = content;
+		this.characterWidth = this.sectionName.offsetWidth / 2;
 		this.row = this.createDiv();
 		this.row.classList.add('row');
 		this.indent();
@@ -90,6 +92,8 @@ class Section {
 			for (let i = 0; i < children.length; i++) {
 				let missingSpaces =
 					(maxWidth - children[i].offsetWidth) / charWidth;
+				if (self.sectionName.title === 'question') {
+				}
 				if (adjustment) {
 					for (let k = 0; k < missingSpaces; k++) {
 						if (
@@ -109,6 +113,7 @@ class Section {
 							maxWidth = children[i].offsetWidth;
 						}
 					}
+
 					if (i + 1 >= children.length) {
 						loopChild(true, self);
 					}
@@ -224,22 +229,44 @@ class Section {
 					String(marginNumber) + 'px');
 		}
 	}
-}
 
-function pages() {
-	let pagesList = document.getElementById('pages');
-	let pages = document.getElementsByClassName('page');
-	for (let i = pages.length; i > 0; i--) {
-		let li = document.createElement('li');
-		li.appendChild(
-			document.createTextNode(getNumberInMandarin(i))
-		);
-		pagesList.appendChild(li);
-		li.onclick = function() {
-			showPage(i);
-		};
+	insertLine() {
+		this.setRow();
+		for (
+			let i = 0;
+			i < this.sectionName.offsetWidth / this.characterWidth;
+			i++
+		) {
+			let space = this.insertSpace();
+			this.row.appendChild(space);
+		}
 	}
 }
+
+document.addEventListener(
+	'DOMContentLoaded',
+	function() {
+		let pagesList = document.createElement('ul');
+		pagesList.id = 'pages';
+		let pages = document.getElementsByClassName('page');
+		for (let i = pages.length; i > 0; i--) {
+			let li = document.createElement('li');
+			li.appendChild(
+				document.createTextNode(getNumberInMandarin(i))
+			);
+			pagesList.appendChild(li);
+			li.onclick = function() {
+				showPage(i);
+			};
+		}
+		document.body.appendChild(pagesList);
+		showPage(1);
+	},
+	false
+);
+// (function pages() {
+
+// })();
 
 function showPage(page: number): any {
 	let pages: any = document.getElementsByClassName('page');
