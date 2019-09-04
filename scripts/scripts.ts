@@ -1,9 +1,3 @@
-interface MandarinNote {
-	character: string;
-	meaning?: string;
-	pronunciation: string;
-}
-
 class Section {
 	content: any[][];
 	sectionName: HTMLElement;
@@ -76,6 +70,15 @@ class Section {
 				meaningTag.appendChild(this.note(meaning, 3));
 				meaningTag.appendChild(this.insertSpace());
 				note.appendChild(meaningTag);
+			} else if (element[0] === 'space') {
+				let note = this.createDiv(['word-note']);
+				this.row.appendChild(note);
+				let wordCharacter = this.createDiv([
+					'word-character-note'
+				]);
+				wordCharacter.appendChild(this.insertSpace()),
+					wordCharacter.appendChild(this.insertSpace()),
+					note.appendChild(wordCharacter);
 			}
 		}
 	}
@@ -92,8 +95,6 @@ class Section {
 			for (let i = 0; i < children.length; i++) {
 				let missingSpaces =
 					(maxWidth - children[i].offsetWidth) / charWidth;
-				if (self.sectionName.title === 'question') {
-				}
 				if (adjustment) {
 					for (let k = 0; k < missingSpaces; k++) {
 						if (
@@ -234,7 +235,8 @@ class Section {
 		this.setRow();
 		for (
 			let i = 0;
-			i < this.sectionName.offsetWidth / this.characterWidth;
+			i <
+			this.sectionName.offsetWidth / this.characterWidth - 1;
 			i++
 		) {
 			let space = this.insertSpace();

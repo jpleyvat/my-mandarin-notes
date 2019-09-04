@@ -58,6 +58,16 @@ var Section = /** @class */ (function () {
                 meaningTag.appendChild(this.insertSpace());
                 note.appendChild(meaningTag);
             }
+            else if (element[0] === 'space') {
+                var note = this.createDiv(['word-note']);
+                this.row.appendChild(note);
+                var wordCharacter = this.createDiv([
+                    'word-character-note'
+                ]);
+                wordCharacter.appendChild(this.insertSpace()),
+                    wordCharacter.appendChild(this.insertSpace()),
+                    note.appendChild(wordCharacter);
+            }
         }
     };
     Section.prototype.adjustSection = function () {
@@ -71,8 +81,6 @@ var Section = /** @class */ (function () {
         (function loopChild(adjustment, self) {
             for (var i = 0; i < children.length; i++) {
                 var missingSpaces = (maxWidth - children[i].offsetWidth) / charWidth;
-                if (self.sectionName.title === 'question') {
-                }
                 if (adjustment) {
                     for (var k = 0; k < missingSpaces; k++) {
                         if (!children[i].classList.contains('title')) {
@@ -190,7 +198,8 @@ var Section = /** @class */ (function () {
     };
     Section.prototype.insertLine = function () {
         this.setRow();
-        for (var i = 0; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
+        for (var i = 0; i <
+            this.sectionName.offsetWidth / this.characterWidth - 1; i++) {
             var space = this.insertSpace();
             this.row.appendChild(space);
         }
