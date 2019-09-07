@@ -3,7 +3,7 @@ class Section {
 	sectionName: HTMLElement;
 	keepRow: boolean = false;
 	row: any;
-	characterWidth;
+	characterWidth: number;
 	constructor(private spaces?: number, content?: any[][]) {
 		this.sectionName =
 			document.scripts[
@@ -28,8 +28,31 @@ class Section {
 		),
 			divTitle.appendChild(title),
 			this.sectionName.appendChild(divTitle);
+		this.fillData();
 		this.showContent();
 		this.adjustSection();
+	}
+
+	fillData() {
+		for (let i = 0; i < this.content.length; i++) {
+			let reali: number;
+			((i) => {
+				reali = i;
+			})(i);
+			let element = this.content[reali];
+			let self = this;
+			if (element[0] === 'character') {
+				if (!element[3] && !element[4]) {
+					let callback = function(data) {
+						self.content[reali][3] = data.meaning;
+						self.content[reali][4] = data.pinyin;
+						console.log(data);
+						console.log(self.content);
+					};
+					getCharacterData(element[2], callback);
+				}
+			}
+		}
 	}
 
 	showContent() {
@@ -43,7 +66,7 @@ class Section {
 				for (let j = 2; j < element.length; j++) {
 					note.appendChild(this.note(element[j], j));
 				}
-				note.append(this.insertSpace());
+				note.appendChild(this.insertSpace());
 			} else if (element[0] === 'word') {
 				let [note, meaning, meaningTag] = [
 					this.createDiv(['word-note']),
@@ -93,13 +116,15 @@ class Section {
 		];
 		(function loopChild(adjustment: boolean, self) {
 			for (let i = 0; i < children.length; i++) {
-				let missingSpaces =
-					(maxWidth - children[i].offsetWidth) / charWidth;
+				let missingSpaces = Math.round(
+					(maxWidth - children[i].offsetWidth) / charWidth
+				);
 				if (adjustment) {
 					for (let k = 0; k < missingSpaces; k++) {
 						if (
 							!children[i].classList.contains('title')
 						) {
+							// debugger
 							children[i].appendChild(
 								self.insertTwoSpaces()
 							);
@@ -235,8 +260,7 @@ class Section {
 		this.setRow();
 		for (
 			let i = 0;
-			i <
-			this.sectionName.offsetWidth / this.characterWidth - 1;
+			i < this.sectionName.offsetWidth / this.characterWidth;
 			i++
 		) {
 			let space = this.insertSpace();
@@ -307,3 +331,52 @@ function getNumberInMandarin(number: number) {
 			return '十';
 	}
 }
+
+// function getCharacterData(character: string, callback) {
+// 	const URL =
+// 		'https://pinyin-meaning-api.herokuapp.com/api/character';
+// 	// let response: any;
+// 	let request = new XMLHttpRequest();
+
+// 	request.open('POST', URL, true);
+// 	request.setRequestHeader('Content-Type', 'application/json');
+// 	request.send(
+// 		JSON.stringify({
+// 			hanzi: character
+// 		})
+// 	);
+// 	request.onreadystatechange = function() {
+// 		if (this.status == 200 && this.readyState === 4) {
+// 			callback(JSON.parse(this.responseText));
+// 		}
+// 	};
+// }
+
+// getCharacterData('我', asd);
+
+const getCharacterData = function(character) {
+	return new Promise((resolve, reject) => {
+		const URL =
+			// 'https://pinyin-meaning-api.herokuapp.com/api/character';
+			'https://pinyin-meaning-api.herokuapp.com/api/character';
+		fetch(URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				hanzi: character
+			})
+		})
+			.then((response) => {
+				resolve(response.json());
+			})
+			.catch((error) => {
+				reject(new Error(error));
+			});
+	});
+};
+
+getCharacterData('我')
+	.then((msg) => console.log('message', msg))
+	.catch((err) => console.log('error', err));

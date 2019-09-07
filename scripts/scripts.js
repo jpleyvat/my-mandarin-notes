@@ -1,4 +1,4 @@
-var Section = /** @class */ (function () {
+var Section = (function () {
     function Section(spaces, content) {
         this.spaces = spaces;
         this.keepRow = false;
@@ -18,9 +18,31 @@ var Section = /** @class */ (function () {
         title.appendChild(document.createTextNode(this.sectionName.title.toUpperCase())),
             divTitle.appendChild(title),
             this.sectionName.appendChild(divTitle);
+        this.fillData();
         this.showContent();
         this.adjustSection();
     }
+    Section.prototype.fillData = function () {
+        for (var i = 0; i < this.content.length; i++) {
+            var reali = void 0;
+            (function (i) {
+                reali = i;
+            })(i);
+            var element = this.content[reali];
+            var self_1 = this;
+            if (element[0] === 'character') {
+                if (!element[3] && !element[4]) {
+                    var callback = function (data) {
+                        self_1.content[reali][3] = data.meaning;
+                        self_1.content[reali][4] = data.pinyin;
+                        console.log(data);
+                        console.log(self_1.content);
+                    };
+                    getCharacterData(element[2], callback);
+                }
+            }
+        }
+    };
     Section.prototype.showContent = function () {
         for (var i = 0; i < this.content.length; i++) {
             var element = this.content[i];
@@ -33,7 +55,7 @@ var Section = /** @class */ (function () {
                 for (var j = 2; j < element.length; j++) {
                     note.appendChild(this.note(element[j], j));
                 }
-                note.append(this.insertSpace());
+                note.appendChild(this.insertSpace());
             }
             else if (element[0] === 'word') {
                 var _a = [
@@ -80,10 +102,11 @@ var Section = /** @class */ (function () {
         ], charWidth = _a[0], title = _a[1];
         (function loopChild(adjustment, self) {
             for (var i = 0; i < children.length; i++) {
-                var missingSpaces = (maxWidth - children[i].offsetWidth) / charWidth;
+                var missingSpaces = Math.round((maxWidth - children[i].offsetWidth) / charWidth);
                 if (adjustment) {
                     for (var k = 0; k < missingSpaces; k++) {
                         if (!children[i].classList.contains('title')) {
+                            // debugger
                             children[i].appendChild(self.insertTwoSpaces());
                         }
                     }
@@ -198,28 +221,24 @@ var Section = /** @class */ (function () {
     };
     Section.prototype.insertLine = function () {
         this.setRow();
-        for (var i = 0; i <
-            this.sectionName.offsetWidth / this.characterWidth - 1; i++) {
+        for (var i = 0; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
             var space = this.insertSpace();
             this.row.appendChild(space);
         }
     };
     return Section;
-}());
+})();
 document.addEventListener('DOMContentLoaded', function () {
     var pagesList = document.createElement('ul');
     pagesList.id = 'pages';
     var pages = document.getElementsByClassName('page');
-    var _loop_1 = function (i) {
+    for (var i = pages.length; i > 0; i--) {
         var li = document.createElement('li');
         li.appendChild(document.createTextNode(getNumberInMandarin(i)));
         pagesList.appendChild(li);
         li.onclick = function () {
             showPage(i);
         };
-    };
-    for (var i = pages.length; i > 0; i--) {
-        _loop_1(i);
     }
     document.body.appendChild(pagesList);
     showPage(1);
@@ -263,3 +282,47 @@ function getNumberInMandarin(number) {
             return '十';
     }
 }
+// function getCharacterData(character: string, callback) {
+// 	const URL =
+// 		'https://pinyin-meaning-api.herokuapp.com/api/character';
+// 	// let response: any;
+// 	let request = new XMLHttpRequest();
+// 	request.open('POST', URL, true);
+// 	request.setRequestHeader('Content-Type', 'application/json');
+// 	request.send(
+// 		JSON.stringify({
+// 			hanzi: character
+// 		})
+// 	);
+// 	request.onreadystatechange = function() {
+// 		if (this.status == 200 && this.readyState === 4) {
+// 			callback(JSON.parse(this.responseText));
+// 		}
+// 	};
+// }
+// getCharacterData('我', asd);
+var getCharacterData = function (character) {
+    return new Promise(function (resolve, reject) {
+        var URL = 
+        // 'https://pinyin-meaning-api.herokuapp.com/api/character';
+        'https://pinyin-meaning-api.herokuapp.com/api/character';
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                hanzi: character
+            })
+        })
+            .then(function (response) {
+            resolve(response.json());
+        })
+            .catch(function (error) {
+            reject(new Error(error));
+        });
+    });
+};
+getCharacterData('我')
+    .then(function (msg) { return console.log('message', msg); })
+    .catch(function (err) { return console.log('error', err); });
