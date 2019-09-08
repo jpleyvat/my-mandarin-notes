@@ -1,6 +1,6 @@
 class Section {
-	content: any[][];
-	sectionName: HTMLElement;
+	content: any;
+	sectionName: any;
 	keepRow: boolean = false;
 	row: any;
 	characterWidth: number;
@@ -28,82 +28,94 @@ class Section {
 		),
 			divTitle.appendChild(title),
 			this.sectionName.appendChild(divTitle);
-		this.fillData();
 		this.showContent();
-		this.adjustSection();
-	}
-
-	fillData() {
-		for (let i = 0; i < this.content.length; i++) {
-			let reali: number;
-			((i) => {
-				reali = i;
-			})(i);
-			let element = this.content[reali];
-			let self = this;
-			if (element[0] === 'character') {
-				if (!element[3] && !element[4]) {
-					let callback = function(data) {
-						self.content[reali][3] = data.meaning;
-						self.content[reali][4] = data.pinyin;
-						console.log(data);
-						console.log(self.content);
-					};
-					getCharacterData(element[2], callback);
-				}
-			}
-		}
 	}
 
 	showContent() {
-		for (let i = 0; i < this.content.length; i++) {
-			let element = this.content[i];
-			if (element[1] === 'same') this.sameRow();
-			this.setRow();
-			if (element[0] === 'character') {
-				let note = this.createDiv(['character-note']);
-				this.row.appendChild(note);
-				for (let j = 2; j < element.length; j++) {
-					note.appendChild(this.note(element[j], j));
+		let index = 0;
+		let loop = function(self: Section) {
+			if (index < self.content.length) {
+				let element = self.content[index];
+				if (element[1] === 'same') self.sameRow();
+				self.setRow();
+
+				switch (element[0]) {
+					case 'character':
+						getCharacterData(self.content[index][2])
+							.then((res: any) => {
+								let note = self.createDiv([
+									'character-note'
+								]);
+								self.row.appendChild(note);
+								note.appendChild(
+									self.note(res.hanzi, 2)
+								);
+								note.appendChild(
+									self.note(res.meaning, 3)
+								);
+								note.appendChild(
+									self.note(res.pinyin, 4)
+								);
+								note.appendChild(self.insertSpace());
+								index += 1;
+								loop(self);
+							})
+							.catch((err) => {
+								console.log('error', err);
+							});
+						break;
+					case 'word':
+						getCharacterData(self.content[index][2])
+							.then((res: any) => {
+								let [note, meaningTag] = [
+									self.createDiv(['word-note']),
+									self.createDiv([
+										'word-character-note'
+									])
+								];
+								self.row.appendChild(note);
+								let pinyin = res.pinyin.split(' ');
+								for (
+									let i = 0;
+									i < res.hanzi.length;
+									i++
+								) {
+									let wordCharacter = self.createDiv(
+										['word-character-note']
+									);
+									wordCharacter.appendChild(
+										self.note(res.hanzi[i], 2)
+									),
+										wordCharacter.appendChild(
+											self.note(pinyin[i], 4)
+										),
+										note.appendChild(
+											wordCharacter
+										);
+								}
+								meaningTag.appendChild(
+									self.note(res.meaning, 3)
+								);
+								meaningTag.appendChild(
+									self.insertSpace()
+								);
+								note.appendChild(meaningTag);
+								index += 1;
+								loop(self);
+							})
+							.catch((err) => {
+								console.log('error', err);
+							});
+						break;
+					default:
+						break;
 				}
-				note.appendChild(this.insertSpace());
-			} else if (element[0] === 'word') {
-				let [note, meaning, meaningTag] = [
-					this.createDiv(['word-note']),
-					element[3],
-					this.createDiv(['word-character-note'])
-				];
-				this.row.appendChild(note);
-				for (let j = 2; j < element.length - 2; j++) {
-					if (j != 3) {
-						for (let k = 0; k < element[j].length; k++) {
-							let wordCharacter = this.createDiv([
-								'word-character-note'
-							]);
-							wordCharacter.appendChild(
-								this.note(element[j][k], j)
-							),
-								wordCharacter.appendChild(
-									this.note(element[j + 2][k], 4)
-								),
-								note.appendChild(wordCharacter);
-						}
-					}
-				}
-				meaningTag.appendChild(this.note(meaning, 3));
-				meaningTag.appendChild(this.insertSpace());
-				note.appendChild(meaningTag);
-			} else if (element[0] === 'space') {
-				let note = this.createDiv(['word-note']);
-				this.row.appendChild(note);
-				let wordCharacter = this.createDiv([
-					'word-character-note'
-				]);
-				wordCharacter.appendChild(this.insertSpace()),
-					wordCharacter.appendChild(this.insertSpace()),
-					note.appendChild(wordCharacter);
+			} else {
+				self.adjustSection();
+				return;
 			}
-		}
+		};
+		loop(this);
 	}
 
 	adjustSection() {
@@ -124,7 +136,6 @@ class Section {
 						if (
 							!children[i].classList.contains('title')
 						) {
-							// debugger
 							children[i].appendChild(
 								self.insertTwoSpaces()
 							);
@@ -159,8 +170,8 @@ class Section {
 		}
 	}
 
-	note(content, typeNumber): HTMLElement {
-		let type: string;
+	note(content: string, typeNumber: number): HTMLElement {
+		let type = '';
 		switch (typeNumber) {
 			case 2:
 				type = 'character';
@@ -290,9 +301,6 @@ document.addEventListener(
 	},
 	false
 );
-// (function pages() {
-
-// })();
 
 function showPage(page: number): any {
 	let pages: any = document.getElementsByClassName('page');
@@ -307,7 +315,7 @@ function showPage(page: number): any {
 	}
 }
 
-function getNumberInMandarin(number: number) {
+function getNumberInMandarin(number: number): string {
 	switch (number) {
 		case 1:
 			return '一';
@@ -330,35 +338,12 @@ function getNumberInMandarin(number: number) {
 		case 10:
 			return '十';
 	}
+	return '';
 }
 
-// function getCharacterData(character: string, callback) {
-// 	const URL =
-// 		'https://pinyin-meaning-api.herokuapp.com/api/character';
-// 	// let response: any;
-// 	let request = new XMLHttpRequest();
-
-// 	request.open('POST', URL, true);
-// 	request.setRequestHeader('Content-Type', 'application/json');
-// 	request.send(
-// 		JSON.stringify({
-// 			hanzi: character
-// 		})
-// 	);
-// 	request.onreadystatechange = function() {
-// 		if (this.status == 200 && this.readyState === 4) {
-// 			callback(JSON.parse(this.responseText));
-// 		}
-// 	};
-// }
-
-// getCharacterData('我', asd);
-
-const getCharacterData = function(character) {
+const getCharacterData = function(character: string) {
+	const URL = 'https://pinyin-meaning-api.herokuapp.com/api';
 	return new Promise((resolve, reject) => {
-		const URL =
-			// 'https://pinyin-meaning-api.herokuapp.com/api/character';
-			'https://pinyin-meaning-api.herokuapp.com/api/character';
 		fetch(URL, {
 			method: 'POST',
 			headers: {
@@ -376,7 +361,3 @@ const getCharacterData = function(character) {
 			});
 	});
 };
-
-getCharacterData('我')
-	.then((msg) => console.log('message', msg))
-	.catch((err) => console.log('error', err));
