@@ -33,12 +33,12 @@ class Section {
 
 	showContent() {
 		let index = 0;
+		let lines = 0;
 		let loop = function(self: Section) {
 			if (index < self.content.length) {
 				let element = self.content[index];
 				if (element[1] === 'same') self.sameRow();
 				self.setRow();
-
 				switch (element[0]) {
 					case 'character':
 						getCharacterData(self.content[index][2])
@@ -107,11 +107,22 @@ class Section {
 								console.log('error', err);
 							});
 						break;
+					case 'line':
+						lines += 1;
+						index += 1;
+						loop(self);
+						break;
 					default:
+						self.insertSpaces(element[0], self.row);
+						index += 1;
+						loop(self);
 						break;
 				}
 			} else {
 				self.adjustSection();
+				for (let i = 0; i < lines; i++) {
+					self.insertLine();
+				}
 				return;
 			}
 		};
@@ -237,6 +248,24 @@ class Section {
 		return div;
 	}
 
+	insertSpaces(type: string, row: any) {
+		switch (type) {
+			case 'fourSpaces':
+				let space = this.createDiv(['character-note']);
+				row.appendChild(space);
+				for (let i = 0; i < 4; i++) {
+					space.appendChild(this.insertSpace());
+				}
+				break;
+			case 'twoSpaces':
+				let twoSpaces = this.insertTwoSpaces();
+				row.appendChild(twoSpaces);
+				break;
+			default:
+				break;
+		}
+	}
+
 	insertSpace() {
 		let space = this.createDiv(['square', 'space'], true);
 		return space;
@@ -270,7 +299,7 @@ class Section {
 	insertLine() {
 		this.setRow();
 		for (
-			let i = 0;
+			let i = 1;
 			i < this.sectionName.offsetWidth / this.characterWidth;
 			i++
 		) {

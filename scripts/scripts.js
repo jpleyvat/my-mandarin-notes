@@ -22,6 +22,7 @@ var Section = (function () {
     }
     Section.prototype.showContent = function () {
         var index = 0;
+        var lines = 0;
         var loop = function (self) {
             if (index < self.content.length) {
                 var element = self.content[index];
@@ -74,12 +75,23 @@ var Section = (function () {
                             console.log('error', err);
                         });
                         break;
+                    case 'line':
+                        lines += 1;
+                        index += 1;
+                        loop(self);
+                        break;
                     default:
+                        self.insertSpaces(element[0], self.row);
+                        index += 1;
+                        loop(self);
                         break;
                 }
             }
             else {
                 self.adjustSection();
+                for (var i = 0; i < lines; i++) {
+                    self.insertLine();
+                }
                 return;
             }
         };
@@ -188,6 +200,23 @@ var Section = (function () {
             }
         return div;
     };
+    Section.prototype.insertSpaces = function (type, row) {
+        switch (type) {
+            case 'fourSpaces':
+                var space = this.createDiv(['character-note']);
+                row.appendChild(space);
+                for (var i = 0; i < 4; i++) {
+                    space.appendChild(this.insertSpace());
+                }
+                break;
+            case 'twoSpaces':
+                var twoSpaces = this.insertTwoSpaces();
+                row.appendChild(twoSpaces);
+                break;
+            default:
+                break;
+        }
+    };
     Section.prototype.insertSpace = function () {
         var space = this.createDiv(['square', 'space'], true);
         return space;
@@ -213,7 +242,7 @@ var Section = (function () {
     };
     Section.prototype.insertLine = function () {
         this.setRow();
-        for (var i = 0; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
+        for (var i = 1; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
             var space = this.insertSpace();
             this.row.appendChild(space);
         }
