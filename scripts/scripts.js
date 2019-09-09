@@ -1,7 +1,9 @@
+var numberOfPages = 2;
 var Section = (function () {
     function Section(spaces, content) {
         this.spaces = spaces;
         this.keepRow = false;
+        // this.hidePage();
         this.sectionName =
             document.scripts[document.scripts.length - 1].parentElement;
         // Global constants
@@ -88,6 +90,11 @@ var Section = (function () {
                 }
             }
             else {
+                if (self.sectionName.title ===
+                    document.getElementsByClassName('section')[document.getElementsByClassName('section')
+                        .length - 1].title) {
+                    self.showPage();
+                }
                 self.adjustSection();
                 for (var i = 0; i < lines; i++) {
                     self.insertLine();
@@ -247,36 +254,33 @@ var Section = (function () {
             this.row.appendChild(space);
         }
     };
+    Section.prototype.showPage = function () {
+        var page = document.getElementsByClassName('page')[0];
+        page.style.opacity = 1;
+    };
+    Section.prototype.hidePage = function () {
+        var page = document.getElementsByClassName('page')[0];
+        page.style.opacity = 0;
+    };
     return Section;
 })();
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
     var pagesList = document.createElement('ul');
     pagesList.id = 'pages';
-    var pages = document.getElementsByClassName('page');
-    for (var i = pages.length; i > 0; i--) {
+    for (var i = numberOfPages; i > 0; i--) {
         var li = document.createElement('li');
-        li.appendChild(document.createTextNode(getNumberInMandarin(i)));
-        pagesList.appendChild(li);
-        li.onclick = function () {
-            showPage(i);
-        };
+        var a = document.createElement('a');
+        var number = document.createTextNode(getNumberInMandarin(i));
+        if (i != 1)
+            a.href = 'page' + i + '.html';
+        else
+            a.href = 'index.html';
+        li.appendChild(number);
+        a.appendChild(li);
+        pagesList.appendChild(a);
+        document.body.appendChild(pagesList);
     }
-    document.body.appendChild(pagesList);
-    showPage(1);
-}, false);
-function showPage(page) {
-    var pages = document.getElementsByClassName('page');
-    if (page) {
-        for (var i = 0; i < pages.length; i++) {
-            if (pages[i].id === String(page)) {
-                pages[i].style.display = 'flex';
-            }
-            else {
-                pages[i].style.display = 'none';
-            }
-        }
-    }
-}
+})();
 function getNumberInMandarin(number) {
     switch (number) {
         case 1:
@@ -299,8 +303,9 @@ function getNumberInMandarin(number) {
             return '九';
         case 10:
             return '十';
+        default:
+            return '';
     }
-    return '';
 }
 var getCharacterData = function (character) {
     var URL = 'https://pinyin-meaning-api.herokuapp.com/api';

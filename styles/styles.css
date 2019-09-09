@@ -25,7 +25,9 @@ ul#pages {
   width: 100%;
   z-index: 5;
 }
-ul li {
+ul a {
+  color: #fff;
+  text-decoration: none;
   align-items: center;
   background-color: #fa8072;
   border-radius: 50%;

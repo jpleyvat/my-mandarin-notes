@@ -1,3 +1,5 @@
+const numberOfPages = 2;
+
 class Section {
 	content: any;
 	sectionName: any;
@@ -5,6 +7,7 @@ class Section {
 	row: any;
 	characterWidth: number;
 	constructor(private spaces?: number, content?: any[][]) {
+		// this.hidePage();
 		this.sectionName =
 			document.scripts[
 				document.scripts.length - 1
@@ -119,6 +122,15 @@ class Section {
 						break;
 				}
 			} else {
+				if (
+					self.sectionName.title ===
+					document.getElementsByClassName('section')[
+						document.getElementsByClassName('section')
+							.length - 1
+					].title
+				) {
+					self.showPage();
+				}
 				self.adjustSection();
 				for (let i = 0; i < lines; i++) {
 					self.insertLine();
@@ -307,42 +319,33 @@ class Section {
 			this.row.appendChild(space);
 		}
 	}
-}
 
-document.addEventListener(
-	'DOMContentLoaded',
-	function() {
-		let pagesList = document.createElement('ul');
-		pagesList.id = 'pages';
-		let pages = document.getElementsByClassName('page');
-		for (let i = pages.length; i > 0; i--) {
-			let li = document.createElement('li');
-			li.appendChild(
-				document.createTextNode(getNumberInMandarin(i))
-			);
-			pagesList.appendChild(li);
-			li.onclick = function() {
-				showPage(i);
-			};
-		}
-		document.body.appendChild(pagesList);
-		showPage(1);
-	},
-	false
-);
+	showPage() {
+		let page: any = document.getElementsByClassName('page')[0];
+		page.style.opacity = 1;
+	}
 
-function showPage(page: number): any {
-	let pages: any = document.getElementsByClassName('page');
-	if (page) {
-		for (let i = 0; i < pages.length; i++) {
-			if (pages[i].id === String(page)) {
-				pages[i].style.display = 'flex';
-			} else {
-				pages[i].style.display = 'none';
-			}
-		}
+	hidePage() {
+		let page: any = document.getElementsByClassName('page')[0];
+		page.style.opacity = 0;
 	}
 }
+
+(() => {
+	let pagesList = document.createElement('ul');
+	pagesList.id = 'pages';
+	for (let i = numberOfPages; i > 0; i--) {
+		let li = document.createElement('li');
+		let a = document.createElement('a');
+		let number = document.createTextNode(getNumberInMandarin(i));
+		if (i != 1) a.href = 'page' + i + '.html';
+		else a.href = 'index.html';
+		li.appendChild(number);
+		a.appendChild(li);
+		pagesList.appendChild(a);
+		document.body.appendChild(pagesList);
+	}
+})();
 
 function getNumberInMandarin(number: number): string {
 	switch (number) {
@@ -366,8 +369,9 @@ function getNumberInMandarin(number: number): string {
 			return '九';
 		case 10:
 			return '十';
+		default:
+			return '';
 	}
-	return '';
 }
 
 const getCharacterData = function(character: string) {

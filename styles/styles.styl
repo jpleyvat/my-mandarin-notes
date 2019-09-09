@@ -31,28 +31,29 @@ ul
     top: calc(100% - 2rem)
     width: 100%
     z-index: 5
-  & li
-    align-items: center
-    background-color: salmon 
-    border-radius: 50%;
-    cursor: pointer
-    color: white
-    display: inherit 
-    font-size: 1rem
-    font-weight: bold
-    height: 2rem
-    justify-content: center
-    list-style: none
-    margin: 0 1rem 0 1rem
-    width: 2rem
-    
+  & a
+      color white
+      text-decoration none
+      align-items: center
+      background-color: salmon 
+      border-radius: 50%;
+      cursor: pointer
+      color: white
+      display: inherit 
+      font-size: 1rem
+      font-weight: bold
+      height: 2rem
+      justify-content: center
+      list-style: none
+      margin: 0 1rem 0 1rem
+      width: 2rem
 
 .page
   align-items: flex-start
   align-self: auto
   border: gray 1px solid 
   box-shadow: 5px 5px 5px silver, -5px -5px 5px silver
-  display: flex 
+  display: flex
   height: pageHeight
   margin: margin
   padding: 'calc(%s / 4)' % characterSize 
