@@ -1,7 +1,9 @@
-var numberOfPages = 2;
-var Section = (function () {
-    function Section(spaces, content) {
-        this.spaces = spaces;
+"use strict";
+const numberOfPages = 2;
+class Section {
+    constructor(content, horizontalSpaces, verticalSpaces) {
+        this.horizontalSpaces = horizontalSpaces;
+        this.verticalSpaces = verticalSpaces;
         this.keepRow = false;
         // this.hidePage();
         this.sectionName =
@@ -13,29 +15,29 @@ var Section = (function () {
         this.row.classList.add('row');
         this.indent();
         // Title
-        var _a = [
+        let [divTitle, title] = [
             this.createDiv(['title']),
             document.createElement('h1')
-        ], divTitle = _a[0], title = _a[1];
+        ];
         title.appendChild(document.createTextNode(this.sectionName.title.toUpperCase())),
             divTitle.appendChild(title),
             this.sectionName.appendChild(divTitle);
         this.showContent();
     }
-    Section.prototype.showContent = function () {
-        var index = 0;
-        var lines = 0;
-        var loop = function (self) {
+    showContent() {
+        let index = 0;
+        let lines = 0;
+        let loop = function (self) {
             if (index < self.content.length) {
-                var element = self.content[index];
+                let element = self.content[index];
                 if (element[1] === 'same')
                     self.sameRow();
                 self.setRow();
                 switch (element[0]) {
                     case 'character':
                         getCharacterData(self.content[index][2])
-                            .then(function (res) {
-                            var note = self.createDiv([
+                            .then((res) => {
+                            let note = self.createDiv([
                                 'character-note'
                             ]);
                             self.row.appendChild(note);
@@ -46,23 +48,23 @@ var Section = (function () {
                             index += 1;
                             loop(self);
                         })
-                            .catch(function (err) {
+                            .catch((err) => {
                             console.log('error', err);
                         });
                         break;
                     case 'word':
                         getCharacterData(self.content[index][2])
-                            .then(function (res) {
-                            var _a = [
+                            .then((res) => {
+                            let [note, meaningTag] = [
                                 self.createDiv(['word-note']),
                                 self.createDiv([
                                     'word-character-note'
                                 ])
-                            ], note = _a[0], meaningTag = _a[1];
+                            ];
                             self.row.appendChild(note);
-                            var pinyin = res.pinyin.split(' ');
-                            for (var i = 0; i < res.hanzi.length; i++) {
-                                var wordCharacter = self.createDiv(['word-character-note']);
+                            let pinyin = res.pinyin.split(' ');
+                            for (let i = 0; i < res.hanzi.length; i++) {
+                                let wordCharacter = self.createDiv(['word-character-note']);
                                 wordCharacter.appendChild(self.note(res.hanzi[i], 2)),
                                     wordCharacter.appendChild(self.note(pinyin[i], 4)),
                                     note.appendChild(wordCharacter);
@@ -73,7 +75,7 @@ var Section = (function () {
                             index += 1;
                             loop(self);
                         })
-                            .catch(function (err) {
+                            .catch((err) => {
                             console.log('error', err);
                         });
                         break;
@@ -90,33 +92,34 @@ var Section = (function () {
                 }
             }
             else {
-                if (self.sectionName.title ===
-                    document.getElementsByClassName('section')[document.getElementsByClassName('section')
-                        .length - 1].title) {
+                let sectionNumber = document.getElementsByClassName('section')
+                    .length - 1;
+                let currentSection = document.getElementsByClassName('section')[sectionNumber];
+                if (self.sectionName.title === currentSection.title) {
                     self.showPage();
                 }
                 self.adjustSection();
-                for (var i = 0; i < lines; i++) {
+                for (let i = 0; i < lines; i++) {
                     self.insertLine();
                 }
                 return;
             }
         };
         loop(this);
-    };
-    Section.prototype.adjustSection = function () {
-        var children = this.sectionName.childNodes;
-        var maxWidth = this.sectionName.offsetWidth;
+    }
+    adjustSection() {
+        let children = this.sectionName.childNodes;
+        let maxWidth = this.sectionName.offsetWidth;
         // let rows: any = this.sectionName.getElementsByClassName('row')
-        var _a = [
+        let [charWidth, title] = [
             this.sectionName.offsetWidth / 2,
             this.sectionName.getElementsByClassName('title')
-        ], charWidth = _a[0], title = _a[1];
+        ];
         (function loopChild(adjustment, self) {
-            for (var i = 0; i < children.length; i++) {
-                var missingSpaces = Math.round((maxWidth - children[i].offsetWidth) / charWidth);
+            for (let i = 0; i < children.length; i++) {
+                let missingSpaces = Math.round((maxWidth - children[i].offsetWidth) / charWidth);
                 if (adjustment) {
-                    for (var k = 0; k < missingSpaces; k++) {
+                    for (let k = 0; k < missingSpaces; k++) {
                         if (!children[i].classList.contains('title')) {
                             children[i].appendChild(self.insertTwoSpaces());
                         }
@@ -135,19 +138,19 @@ var Section = (function () {
                 }
             }
         })(false, this);
-        var columnsToFill = Math.ceil(maxWidth / charWidth);
+        let columnsToFill = Math.ceil(maxWidth / charWidth);
         this.sectionName.style.width =
             (maxWidth + 1).toString() + 'px';
-        for (var k = 0; k < columnsToFill; k++) {
-            var space = this.createDiv(['square', 'space'], true);
+        for (let k = 0; k < columnsToFill; k++) {
+            let space = this.createDiv(['square', 'space'], true);
             if (!(k + 1 < columnsToFill)) {
                 space.style.borderRight = 'none';
             }
             title[0].appendChild(space);
         }
-    };
-    Section.prototype.note = function (content, typeNumber) {
-        var type = '';
+    }
+    note(content, typeNumber) {
+        let type = '';
         switch (typeNumber) {
             case 2:
                 type = 'character';
@@ -159,17 +162,17 @@ var Section = (function () {
                 type = 'pronunciation';
                 break;
         }
-        var element = this.createDiv(['square', type], true);
-        var innerTag = document.createElement('p');
+        let element = this.createDiv(['square', type], true);
+        let innerTag = document.createElement('p');
         innerTag.appendChild(document.createTextNode(content));
         element.appendChild(innerTag);
         return element;
-    };
-    Section.prototype.appendElement = function (parent, elementToAdd, classToAdd) {
-        var _a = [
+    }
+    appendElement(parent, elementToAdd, classToAdd) {
+        let [div, line] = [
             document.createElement('div'),
             document.createElement('div')
-        ], div = _a[0], line = _a[1];
+        ];
         div.classList.add('square'),
             line.classList.add('line'),
             div.appendChild(line);
@@ -178,99 +181,112 @@ var Section = (function () {
         if (classToAdd)
             div.classList.add(classToAdd);
         parent.appendChild(div);
-    };
-    Section.prototype.setRow = function () {
+    }
+    setRow() {
         if (this.keepRow) {
             this.sectionName.appendChild(this.row),
                 (this.keepRow = false);
         }
         else {
-            var newRow = this.createDiv();
+            let newRow = this.createDiv();
             newRow.classList.add('row'),
                 (this.row = newRow),
                 this.sectionName.appendChild(this.row);
         }
-    };
-    Section.prototype.sameRow = function () {
+    }
+    sameRow() {
         this.keepRow = true;
-    };
-    Section.prototype.createDiv = function (classes, withLine) {
-        var div = document.createElement('div');
+    }
+    createDiv(classes, withLine) {
+        let div = document.createElement('div');
         if (withLine) {
-            var line = document.createElement('div');
+            let line = document.createElement('div');
             line.classList.add('line');
             div.appendChild(line);
         }
         if (classes)
-            for (var i = 0; i < classes.length; i++) {
+            for (let i = 0; i < classes.length; i++) {
                 div.classList.add(classes[i]);
             }
         return div;
-    };
-    Section.prototype.insertSpaces = function (type, row) {
+    }
+    insertSpaces(type, row) {
         switch (type) {
             case 'fourSpaces':
-                var space = this.createDiv(['character-note']);
+                let space = this.createDiv(['character-note']);
                 row.appendChild(space);
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     space.appendChild(this.insertSpace());
                 }
                 break;
             case 'twoSpaces':
-                var twoSpaces = this.insertTwoSpaces();
+                let twoSpaces = this.insertTwoSpaces();
                 row.appendChild(twoSpaces);
                 break;
             default:
                 break;
         }
-    };
-    Section.prototype.insertSpace = function () {
-        var space = this.createDiv(['square', 'space'], true);
+    }
+    insertSpace() {
+        let space = this.createDiv(['square', 'space'], true);
         return space;
-    };
-    Section.prototype.insertTwoSpaces = function () {
-        var twoSpaces = this.createDiv(['word-character-note'], true);
+    }
+    insertTwoSpaces() {
+        let twoSpaces = this.createDiv(['word-character-note'], true);
         twoSpaces.appendChild(this.insertSpace());
         twoSpaces.appendChild(this.insertSpace());
         return twoSpaces;
-    };
-    Section.prototype.indent = function () {
-        var charWidth = Number(window
+    }
+    indent() {
+        let charWidth;
+        charWidth = Number(window
             .getComputedStyle(document.body)
             .getPropertyValue('font-size')
-            .match(/\d+/)[0]);
-        for (var i = 0; i < this.spaces; i++) {
-            var margin = this.sectionName.style.marginLeft;
-            var marginNumber = Number(margin.replace('px', ''));
-            (marginNumber += charWidth),
-                (this.sectionName.style.marginLeft =
-                    String(marginNumber) + 'px');
+            .replace('px', ''));
+        if (this.horizontalSpaces) {
+            for (let i = 0; i < this.horizontalSpaces; i++) {
+                let marginLeft = this.sectionName.style
+                    .marginLeft;
+                let marginNumber = Number(marginLeft.replace('px', ''));
+                (marginNumber += charWidth),
+                    (this.sectionName.style.marginLeft =
+                        String(marginNumber) + 'px');
+            }
         }
-    };
-    Section.prototype.insertLine = function () {
+        if (this.verticalSpaces) {
+            for (let i = 0; i < this.verticalSpaces; i++) {
+                let marginTop = this.sectionName.style
+                    .marginTop;
+                let marginNumber = Number(marginTop.replace('px', ''));
+                (marginNumber += charWidth),
+                    (this.sectionName.style.marginTop =
+                        String(marginNumber) + 'px');
+            }
+        }
+    }
+    insertLine() {
         this.setRow();
-        for (var i = 1; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
-            var space = this.insertSpace();
+        for (let i = 1; i < this.sectionName.offsetWidth / this.characterWidth; i++) {
+            let space = this.insertSpace();
             this.row.appendChild(space);
         }
-    };
-    Section.prototype.showPage = function () {
-        var page = document.getElementsByClassName('page')[0];
+    }
+    showPage() {
+        let page = document.getElementsByClassName('page')[0];
         page.style.opacity = 1;
-    };
-    Section.prototype.hidePage = function () {
-        var page = document.getElementsByClassName('page')[0];
+    }
+    hidePage() {
+        let page = document.getElementsByClassName('page')[0];
         page.style.opacity = 0;
-    };
-    return Section;
-})();
-(function () {
-    var pagesList = document.createElement('ul');
+    }
+}
+(() => {
+    let pagesList = document.createElement('ul');
     pagesList.id = 'pages';
-    for (var i = numberOfPages; i > 0; i--) {
-        var li = document.createElement('li');
-        var a = document.createElement('a');
-        var number = document.createTextNode(getNumberInMandarin(i));
+    for (let i = numberOfPages; i > 0; i--) {
+        let li = document.createElement('li');
+        let a = document.createElement('a');
+        let number = document.createTextNode(getNumberInMandarin(i));
         if (i != 1)
             a.href = 'page' + i + '.html';
         else
@@ -307,9 +323,9 @@ function getNumberInMandarin(number) {
             return '';
     }
 }
-var getCharacterData = function (character) {
-    var URL = 'https://pinyin-meaning-api.herokuapp.com/api';
-    return new Promise(function (resolve, reject) {
+const getCharacterData = function (character) {
+    const URL = 'https://pinyin-meaning-api.herokuapp.com/api';
+    return new Promise((resolve, reject) => {
         fetch(URL, {
             method: 'POST',
             headers: {
@@ -319,10 +335,10 @@ var getCharacterData = function (character) {
                 hanzi: character
             })
         })
-            .then(function (response) {
+            .then((response) => {
             resolve(response.json());
         })
-            .catch(function (error) {
+            .catch((error) => {
             reject(new Error(error));
         });
     });

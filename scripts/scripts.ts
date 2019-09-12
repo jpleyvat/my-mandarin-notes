@@ -6,7 +6,11 @@ class Section {
 	keepRow: boolean = false;
 	row: any;
 	characterWidth: number;
-	constructor(private spaces?: number, content?: any[][]) {
+	constructor(
+		content?: any[][],
+		private horizontalSpaces?: number,
+		private verticalSpaces?: number
+	) {
 		// this.hidePage();
 		this.sectionName =
 			document.scripts[
@@ -122,13 +126,13 @@ class Section {
 						break;
 				}
 			} else {
-				if (
-					self.sectionName.title ===
-					document.getElementsByClassName('section')[
-						document.getElementsByClassName('section')
-							.length - 1
-					].title
-				) {
+				let sectionNumber: number =
+					document.getElementsByClassName('section')
+						.length - 1;
+				let currentSection: any = document.getElementsByClassName(
+					'section'
+				)[sectionNumber];
+				if (self.sectionName.title === currentSection.title) {
 					self.showPage();
 				}
 				self.adjustSection();
@@ -291,20 +295,36 @@ class Section {
 	}
 
 	indent() {
-		let charWidth = Number(
+		let charWidth: number;
+		charWidth = Number(
 			window
 				.getComputedStyle(document.body)
 				.getPropertyValue('font-size')
-				.match(/\d+/)[0]
+				.replace('px', '')
 		);
-		for (let i = 0; i < this.spaces; i++) {
-			let margin: string = this.sectionName.style.marginLeft;
-			let marginNumber: number = Number(
-				margin.replace('px', '')
-			);
-			(marginNumber += charWidth),
-				(this.sectionName.style.marginLeft =
-					String(marginNumber) + 'px');
+		if (this.horizontalSpaces) {
+			for (let i = 0; i < this.horizontalSpaces; i++) {
+				let marginLeft: string = this.sectionName.style
+					.marginLeft;
+				let marginNumber: number = Number(
+					marginLeft.replace('px', '')
+				);
+				(marginNumber += charWidth),
+					(this.sectionName.style.marginLeft =
+						String(marginNumber) + 'px');
+			}
+		}
+		if (this.verticalSpaces) {
+			for (let i = 0; i < this.verticalSpaces; i++) {
+				let marginTop: string = this.sectionName.style
+					.marginTop;
+				let marginNumber: number = Number(
+					marginTop.replace('px', '')
+				);
+				(marginNumber += charWidth),
+					(this.sectionName.style.marginTop =
+						String(marginNumber) + 'px');
+			}
 		}
 	}
 
